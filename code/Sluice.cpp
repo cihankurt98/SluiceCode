@@ -42,6 +42,11 @@ State Sluice::HandleStateEmergency(Events ev)
 	switch (ev)
 	{
 		case EV_RESUME:
+		return 0;
+
+		default:
+			break;
 
 	}
+	return nextState;
 }
