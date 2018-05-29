@@ -5,6 +5,7 @@ class iTimer {
 
 
 public:
+	virtual ~iTimer();
 	void setTime();
 
 	void Cancel();

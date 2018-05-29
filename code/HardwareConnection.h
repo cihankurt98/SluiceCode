@@ -1,10 +1,10 @@
 #ifndef HARDWARECONNECTION_H
 #define HARDWARECONNECTION_H
 
-#include "Door.h"
-#include "TrafficLight.h"
-#include "WaterSensor.h"
-#include "Valve.h"
+#include "iDoor.h"
+#include "iTrafficLight.h"
+#include "iWaterSensor.h"
+#include "iValve.h"
 
 #include <arpa/inet.h>
 

@@ -5,6 +5,7 @@ class iLock {
 
 
 public:
+	virtual ~iLock();
 	void GetLockStatus();
 
 	void SetLockStatus();
