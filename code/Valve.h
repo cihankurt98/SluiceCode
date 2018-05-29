@@ -1,7 +1,7 @@
 #ifndef VALVE_H
 #define VALVE_H
 
-#include "iValve.h"
+#include "interfaces/iValve.h"
 
 class Valve : public iValve
 {
@@ -15,7 +15,6 @@ private:
 	// private copy constructor and assignment operator to prevent making copies
 	Valve(const Valve&) { /* do nothing */ };
 	Valve& operator=(const Valve&) { return *this; };
-};
 };
 
 #endif

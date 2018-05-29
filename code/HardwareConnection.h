@@ -1,10 +1,10 @@
 #ifndef HARDWARECONNECTION_H
 #define HARDWARECONNECTION_H
 
-#include "iDoor.h"
-#include "iTrafficLight.h"
-#include "iWaterSensor.h"
-#include "iValve.h"
+#include "Door.h"
+#include "TrafficLight.h"
+#include "WaterSensor.h"
+#include "Valve.h"
 
 #include <arpa/inet.h>
 
@@ -12,7 +12,7 @@ class HardwareConnection
 {
 
   public:
-	HardwareConnection(Door door, TrafficLight trafficLight, WaterSensor waterSensor, Valve valve);
+	HardwareConnection(iDoor door, iTrafficLight trafficLight, iWaterSensor waterSensor, iValve valve);
 
 	int Send(int socket, char message[], int size, int flags);
 

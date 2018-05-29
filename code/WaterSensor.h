@@ -1,7 +1,7 @@
 #ifndef WATERSENSOR_H
 #define WATERSENSOR_H
 
-#include "iWaterSensor"
+#include "interfaces/iWaterSensor.h"
 
 class WaterSensor : public iWaterSensor
 {

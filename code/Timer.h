@@ -1,7 +1,7 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include "iTimer.h"
+#include "interfaces/iTimer.h"
 
 class Timer : public iTimer
 {
@@ -15,9 +15,8 @@ public:
 
 private:
 	// private copy constructor and assignment operator to prevent making copies
-	Display(const Display&) { /* do nothing */ };
-	Display& operator=(const Display&) { return *this; };
-};
+	Timer(const Timer&) { /* do nothing */ };
+	Timer& operator=(const Timer&) { return *this; };
 };
 
 #endif

@@ -1,9 +1,9 @@
 #ifndef DOOR_H
 #define DOOR_H
 
-#include "iDoor.h"
+#include "interfaces/iDoor.h"
 #include "Valve.h"
-#include "Lock.h"
+#include "interfaces/iLock.h"
 
 class Door : public iDoor, public iValve, public iLock
 

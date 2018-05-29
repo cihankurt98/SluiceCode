@@ -11,7 +11,7 @@ Sluice::Sluice(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLig
 	IdleEntryActions();
 }
 
-BreadBaker::~BreadBaker()
+Sluice::~Sluice()
 {
 
 }

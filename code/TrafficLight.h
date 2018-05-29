@@ -1,7 +1,7 @@
 #ifndef TRAFFICLIGHT_H
 #define TRAFFICLIGHT_H
 
-#include "iTrafficLight"
+#include "interfaces/iTrafficLight.h"
 
 class TrafficLight : public iTrafficLight
 

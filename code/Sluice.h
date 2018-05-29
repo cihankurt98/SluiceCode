@@ -1,6 +1,11 @@
 #ifndef SLUICE_H
 #define SLUICE_H
 
+
+#include "HardwareConnection.h"
+#include "State.h"
+#include "Events.h"
+
 class Sluice {
 
 
@@ -14,9 +19,9 @@ private:
 	State HandleStateIdle(Events ev);
 	State HandleStateSchutten(Events ev);
 	State HandleStateEmergency(Events ev);
+	iDoor& door;
 	iWaterSensor& waterSensor;
 	iTrafficLight& trafficLight;
-	iDoor& door;
 	iLock& lock;
 
 	void IdleEntryActions();
@@ -27,7 +32,7 @@ private:
 	void EmergencyExitActions();
 
 
-	Sluice(const Sluice& other): door(other.door), lock(other.lock), waterSensor(other.waterSensor);
+	Sluice(const Sluice& other): door(other.door), waterSensor(other.waterSensor), trafficLight(other.trafficLight), lock(other.lock){};
 	Sluice& operator= (const Sluice&) {return *this; };
 };
 
