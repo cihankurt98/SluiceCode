@@ -1,12 +1,19 @@
 #include "HardwareConnection.h"
-
 #include <sys/socket.h>
 #include <string.h>
+#include <unistd.h> // close sock
 
-HardwareConnection::HardwareConnection(Door door, TrafficLight trafficLight, WaterSensor waterSensor, Valve valve)
+HardwareConnection::HardwareConnection(iDoor door, iTrafficLight trafficLight, iWaterSensor waterSensor, iValve valve)
 {
-	// TODO - implement HardwareConnection::HardwareConnection
-	throw "Not yet implemented";
+	if (CreateTCPSocket() == -1 )
+	{
+		//exception
+	}
+}
+
+HardwareConnection::~HardwareConnection()
+{
+	close(socket_desc);
 }
 
 int HardwareConnection::Send(int socket, char message[], int size, int flags)
@@ -22,7 +29,7 @@ int HardwareConnection::Receive(int socket, char message[], int size, int flags)
 {
 	if (recv(socket, message, size, flags) <= 0)
 	{
-		memset(message, 0, sizeof(message)); //Clean array if corrupt bufferfill
+		memset(message, 0, 20); //Clean array if corrupt bufferfill //sizeof chararray ipv 20 vanwege compiler error
 		return -1;
 	}
 	return 0;

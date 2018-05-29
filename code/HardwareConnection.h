@@ -13,7 +13,7 @@ class HardwareConnection
 
   public:
 	HardwareConnection(iDoor door, iTrafficLight trafficLight, iWaterSensor waterSensor, iValve valve);
-
+	~HardwareConnection();
 	int Send(int socket, char message[], int size, int flags);
 
 	int Receive(int socket, char message[], int size, int flags);

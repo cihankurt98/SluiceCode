@@ -1,9 +1,10 @@
 #include "Sluice.h"
+#include <cstddef>
 
 Sluice::Sluice(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight,
 	 iLock& lock)
-	 : currentState(Idle)
-	 , door(door)
+	 //: currentState(Idle)
+	 : door(door)
 	 , waterSensor(waterSensor)
 	 , trafficLight(trafficLight)
 	 , lock(lock)
@@ -42,7 +43,7 @@ State Sluice::HandleStateEmergency(Events ev)
 	switch (ev)
 	{
 		case EV_RESUME:
-		return 0;
+		break; //was return 0;
 
 		default:
 			break;
@@ -80,6 +81,7 @@ State Sluice::HandleStateSchutten(Events ev)
 			break;
 
 	}
+	return nextState;
 }
 
 //PRIVATE METHODS BELOW

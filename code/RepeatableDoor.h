@@ -1,10 +1,13 @@
 #ifndef REPEATABLEDOOR_H
 #define REPEATABLEDOOR_H
 
-class RepeatableDoor : Door {
+#include "Door.h"
 
-
+class RepeatableDoor : public Door
+{
 public:
+	RepeatableDoor();
+	~RepeatableDoor();
 	void GetDoorStatus();
 
 	void SetDoorStatus();
