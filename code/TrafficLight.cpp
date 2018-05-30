@@ -1,11 +1,20 @@
 #include "TrafficLight.h"
 
-void TrafficLight::GetTrafficLightStatus() {
-	// TODO - implement TrafficLight::GetTrafficLightStatus
-	throw "Not yet implemented";
+TrafficLight::TrafficLight(HardwareConnection* const hardwareConnection)
+{
+	this->hardwareConnection = hardwareConnection;
 }
 
-void TrafficLight::SetTrafficLightStatus() {
-	// TODO - implement TrafficLight::SetTrafficLightStatus
-	throw "Not yet implemented";
+std::string TrafficLight::GetTrafficLightStatus(char message[], int size)
+{
+	return hardwareConnection->Transmit(message, size, 0);
+}
+
+bool TrafficLight::SetTrafficLightStatus(char message[], int size)
+{
+	if ("ack" != hardwareConnection->Transmit(message, size, 0))
+	{
+		return false;
+	}
+	return true;
 }

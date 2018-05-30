@@ -26,13 +26,14 @@ HardwareConnection::~HardwareConnection()
 	close(socket_desc);
 }
 
-std::string HardwareConnection::Transmit(char message[], int size, int flags)
+std::string HardwareConnection::Transmit(char message[], int size,  int flags)
 {
 	if (send(socket_desc, message, size, flags) == -1)
 	{
 		return NULL;
 	}
-	char receivedMessage[20];
-	recv(socket_desc, receivedMessage, size, flags);
+	const int receiveMessageSize = 20;
+	char receivedMessage[receiveMessageSize];
+	recv(socket_desc, receivedMessage, receiveMessageSize, flags);
 	return (std::string) receivedMessage;
 }

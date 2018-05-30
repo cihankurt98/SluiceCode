@@ -1,21 +1,34 @@
 #include "Door.h"
 
-void Door::GetDoorStatus() {
-	// TODO - implement Door::GetDoorStatus
-	throw "Not yet implemented";
+Door::Door(HardwareConnection* const hardwareConnection) //not allowed to modify ptr
+{
+	this->hardwareConnection = hardwareConnection;
 }
 
-void Door::SetDoorStatus() {
-	// TODO - implement Door::SetDoorStatus
-	throw "Not yet implemented";
+std::string Door::GetDoorStatus(char message[], int size)
+{
+	return hardwareConnection->Transmit(message, size, 0);
 }
 
-void Door::GetLockStatus() {
-	// TODO - implement Door::GetLockStatus
-	throw "Not yet implemented";
+bool Door::SetDoorStatus(char message[], int size)
+{
+	if ("ack" != hardwareConnection->Transmit(message, size, 0))
+	{
+		return false;
+	}
+	return true;
 }
 
-void Door::SetLockStatus() {
-	// TODO - implement Door::SetLockStatus
-	throw "Not yet implemented";
+std::string Door::GetLockStatus(char message[], int size)
+{
+	return hardwareConnection->Transmit(message, size, 0);
+}
+
+bool Door::SetLockStatus(char message[], int size)
+{
+	if ("ack" != hardwareConnection->Transmit(message, size, 0))
+	{
+		return false;
+	}
+	return true;
 }

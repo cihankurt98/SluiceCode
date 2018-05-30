@@ -1,6 +1,7 @@
 #ifndef TRAFFICLIGHT_H
 #define TRAFFICLIGHT_H
 
+#include "HardwareConnection.h"
 #include "interfaces/iTrafficLight.h"
 
 class TrafficLight : public iTrafficLight
@@ -8,11 +9,13 @@ class TrafficLight : public iTrafficLight
 {
 
 public:
-	TrafficLight();
-	void GetTrafficLightStatus();
-	void SetTrafficLightStatus();
+	TrafficLight(HardwareConnection* const hardwareConnection);
+	~TrafficLight();
+	std::string GetTrafficLightStatus(char message[], int size);
+	bool SetTrafficLightStatus(char message[], int size);
 
 private:
+	HardwareConnection* hardwareConnection;
 	// private copy constructor and assignment operator to prevent making copies
 	TrafficLight(const TrafficLight&) { /* do nothing */ };
 	TrafficLight& operator=(const TrafficLight&) { return *this; };

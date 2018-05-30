@@ -2,12 +2,6 @@
 #define HARDWARECONNECTION_H
 
 #include <string>
-
-#include "Door.h"
-#include "TrafficLight.h"
-#include "WaterSensor.h"
-#include "Valve.h"
-
 #include <arpa/inet.h>
 
 class HardwareConnection

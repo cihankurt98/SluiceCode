@@ -1,11 +1,21 @@
 #include "Valve.h"
 
-void Valve::GetValveStatus() {
-	// TODO - implement Valve::GetValveStatus
-	throw "Not yet implemented";
+
+Valve::Valve(HardwareConnection* const hardwareConnection)
+{
+	this->hardwareConnection = hardwareConnection;
 }
 
-void Valve::SetValveStatus() {
-	// TODO - implement Valve::SetValveStatus
-	throw "Not yet implemented";
+std::string Valve::GetValveStatus(char message[], int size)
+{
+	return hardwareConnection->Transmit(message, size, 0);
+}
+
+bool Valve::SetValveStatus(char message[], int size)
+{
+	if ("ack" != hardwareConnection->Transmit(message, size, 0))
+	{
+		return false;
+	}
+	return true;
 }

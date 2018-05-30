@@ -1,6 +1,12 @@
 #include "WaterSensor.h"
 
-void WaterSensor::GetWaterLevel() {
-	// TODO - implement WaterSensor::GetWaterLevel
-	throw "Not yet implemented";
+
+WaterSensor::WaterSensor(HardwareConnection* const hardwareConnection)
+{
+	this->hardwareConnection = hardwareConnection;
+}
+
+std::string WaterSensor::GetWaterLevel(char message[], int size)
+{
+	return hardwareConnection->Transmit(message, size, 0);
 }

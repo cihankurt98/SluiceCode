@@ -1,13 +1,13 @@
 #include "Sluice.h"
+#include <iostream>
 #include <cstddef>
 
-Sluice::Sluice(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight,
-	 iLock& lock)
+Sluice::Sluice(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight)
 	 //: currentState(Idle)
 	 : door(door)
 	 , waterSensor(waterSensor)
 	 , trafficLight(trafficLight)
-	 , lock(lock)
+	 , schutState(new SchutState(door, waterSensor,trafficLight))
 {
 	IdleEntryActions();
 }
@@ -25,7 +25,6 @@ State Sluice::HandleStateIdle(Events ev)
 	{
 		case EV_SCHUTSTART:
 			IdleExitActions();
-
 			nextState = Schutten;
 			SchuttenEntryActions();
 		default:
@@ -71,13 +70,24 @@ State Sluice::HandleStateSchutten(Events ev)
 
 			nextState = Idle;
 			break;
-		case EV_EMERGENCY:
-			SchuttenExitActions();
 
-			nextState = Emergency;
-			EmergencyEntryActions();
-
+		//Schutten substates below
 		default:
+			schutState->HandleEvent(nextState, ev);
+			if (nextState != Schutten)
+			{
+				SchuttenExitActions();
+				switch (nextState)
+				{
+					case EV_EMERGENCY:
+						nextState = Emergency;
+						EmergencyEntryActions();
+						break;
+					default:
+						std::cerr << "ERROR: unhandled state with number: " << nextState;
+				}
+			}
+
 			break;
 
 	}
