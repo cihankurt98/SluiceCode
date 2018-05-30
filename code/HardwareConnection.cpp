@@ -2,13 +2,23 @@
 #include <sys/socket.h>
 #include <string.h>
 #include <unistd.h> // close sock
+#include <stdexcept>
 
-HardwareConnection::HardwareConnection(iDoor door, iTrafficLight trafficLight, iWaterSensor waterSensor, iValve valve)
+HardwareConnection::HardwareConnection(char ip[15], int port)
 {
-	if (CreateTCPSocket() == -1 )
+	socket_desc = socket(AF_INET, SOCK_STREAM, 0); // list met meerdere sockets voor meerdere connecties?
+	if (socket_desc <= -1)
 	{
-		//exception
+		throw std::logic_error("socket is <= -1"); //nog catche
 	}
+
+	simulator.sin_addr.s_addr = inet_addr(ip);
+	simulator.sin_family = AF_INET;
+	simulator.sin_port = htons(port);
+	if (connect(socket_desc, (struct sockaddr *)&simulator, sizeof(simulator)) < 0)
+	{
+		throw std::logic_error("connect is <= -1"); //nog catchen
+	}	
 }
 
 HardwareConnection::~HardwareConnection()
@@ -16,43 +26,13 @@ HardwareConnection::~HardwareConnection()
 	close(socket_desc);
 }
 
-int HardwareConnection::Send(int socket, char message[], int size, int flags)
+std::string HardwareConnection::Transmit(char message[], int size, int flags)
 {
-	if (send(socket, message, size, flags) == -1)
+	if (send(socket_desc, message, size, flags) == -1)
 	{
-		return -1;
+		return NULL;
 	}
-	return 0;
-}
-
-int HardwareConnection::Receive(int socket, char message[], int size, int flags)
-{
-	if (recv(socket, message, size, flags) <= 0)
-	{
-		memset(message, 0, 20); //Clean array if corrupt bufferfill //sizeof chararray ipv 20 vanwege compiler error
-		return -1;
-	}
-	return 0;
-}
-
-int HardwareConnection::Connect(char ip[], int port)
-{
-	simulator.sin_addr.s_addr = inet_addr(ip);
-	simulator.sin_family = AF_INET;
-	simulator.sin_port = htons(port);
-	if (CreateTCPSocket() == 0 || connect(socket_desc, (struct sockaddr *)&simulator, sizeof(simulator)) < 0)
-	{
-		return -1;
-	}
-	return 1;
-}
-
-int HardwareConnection::CreateTCPSocket()
-{
-	socket_desc = socket(AF_INET, SOCK_STREAM, 0); // list met meerdere sockets voor meerdere connecties?
-	if (socket_desc == -1)
-	{
-		return -1;
-	}
-	return 1;
+	char receivedMessage[20];
+	recv(socket_desc, receivedMessage, size, flags);
+	return (std::string) receivedMessage;
 }

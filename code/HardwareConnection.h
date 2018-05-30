@@ -1,6 +1,8 @@
 #ifndef HARDWARECONNECTION_H
 #define HARDWARECONNECTION_H
 
+#include <string>
+
 #include "Door.h"
 #include "TrafficLight.h"
 #include "WaterSensor.h"
@@ -12,19 +14,17 @@ class HardwareConnection
 {
 
   public:
-	HardwareConnection(iDoor door, iTrafficLight trafficLight, iWaterSensor waterSensor, iValve valve);
+	HardwareConnection(char ip[15], int port);
 	~HardwareConnection();
-	int Send(int socket, char message[], int size, int flags);
-
-	int Receive(int socket, char message[], int size, int flags);
-
-	int Connect(char ip[], int port);
+	std::string Transmit(char message[], int size, int flags);
 
 
 	private:
 	int socket_desc;
 	struct sockaddr_in simulator;
-	int CreateTCPSocket();
+	// private copy constructor and assignment operator to prevent making copies
+	HardwareConnection(const HardwareConnection&) { /* do nothing */ };
+	HardwareConnection& operator=(const HardwareConnection&) { return *this; };
 };
 
 #endif

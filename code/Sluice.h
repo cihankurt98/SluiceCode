@@ -10,7 +10,7 @@ class Sluice {
 
 
 public:
-	Sluice(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight, iLock& lock);
+	Sluice(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight, iLock& lock, HardwareConnection& hardwareConnection);
 	~Sluice();
 
 private:
