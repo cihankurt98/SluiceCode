@@ -11,7 +11,6 @@ class Door : public iDoor, public iValve, public iLock
 {
 public:
 	Door(HardwareConnection* const hardwareConnection);
-	~Door();
 	std::string GetDoorStatus(char message[], int size);
 
 	bool SetDoorStatus(char message[], int size);

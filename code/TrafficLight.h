@@ -10,7 +10,6 @@ class TrafficLight : public iTrafficLight
 
 public:
 	TrafficLight(HardwareConnection* const hardwareConnection);
-	~TrafficLight();
 	std::string GetTrafficLightStatus(char message[], int size);
 	bool SetTrafficLightStatus(char message[], int size);
 

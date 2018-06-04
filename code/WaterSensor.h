@@ -8,7 +8,6 @@ class WaterSensor : public iWaterSensor
 {
 public:
 	WaterSensor(HardwareConnection* const hardwareConnection);
-	~WaterSensor();
 	std::string GetWaterLevel(char message[], int size);
 
 private:

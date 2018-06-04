@@ -8,7 +8,6 @@ class Valve : public iValve
 {
 public:
 	Valve(HardwareConnection* const hardwareConnection);
-	~Valve();
 	std::string GetValveStatus(char message[], int size);
 
 	bool SetValveStatus(char message[], int size);
