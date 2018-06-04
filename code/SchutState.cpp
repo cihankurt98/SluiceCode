@@ -1,6 +1,7 @@
 #include "SchutState.h"
+#include <iostream>
 
-SchutState::SchutState(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight)
+SchutState::SchutState(iDoor* door, iWaterSensor* waterSensor, iTrafficLight* trafficLight)
 {
 	// TODO - implement SchutState::SchutState
   this->door = door;
@@ -13,11 +14,17 @@ void SchutState::HandlePseudoState()
 	// TODO - implement SchutState::HandlePseudoState
 }
 
-void SchutState::HandleEvent(State superState, Events ev)
+void SchutState::HandleEvent(State* superState, Events* ev)
 {
-	// TODO - implement SchutState::HandleEvent
-  superstate = Idle;
-  ev = EV_EMERGENCY;
+	if (superState == NULL || ev == NULL)
+	{
+		std::cout << "kanker zooi" << std::endl;
+	}
+	else
+	{
+		std::cout << "yeuy niet null" << std::endl;
+	}
+  
 }
 
 void SchutState::ExitActions()

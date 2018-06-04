@@ -7,7 +7,7 @@ Sluice::Sluice(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLig
 	 : door(door)
 	 , waterSensor(waterSensor)
 	 , trafficLight(trafficLight)
-	 , schutState(new SchutState(door, waterSensor,trafficLight))
+	 , schutState(new SchutState(&door, &waterSensor,&trafficLight))
 {
 	IdleEntryActions();
 }
@@ -73,7 +73,7 @@ State Sluice::HandleStateSchutten(Events ev)
 
 		//Schutten substates below
 		default:
-			schutState->HandleEvent(nextState, ev);
+			schutState->HandleEvent(&nextState, &ev);
 			if (nextState != Schutten)
 			{
 				SchuttenExitActions();
