@@ -73,7 +73,7 @@ State Sluice::HandleStateSchutten(Events ev)
 
 		//Schutten substates below
 		default:
-			schutState->HandleEvent(&nextState, &ev);
+			schutState->HandleEvent(&nextState, ev);
 			if (nextState != Schutten)
 			{
 				SchuttenExitActions();

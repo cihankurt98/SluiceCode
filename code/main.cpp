@@ -41,7 +41,7 @@ int main()
 	WaterSensor waterSensor(&cHandlerOne);
 	TrafficLight trafficLight(&cHandlerOne);
 	Sluice sluiceOne(door, waterSensor, trafficLight);
-	char messageToBeSent[13] = {"GetDoorLeft;"};
+	char messageToBeSent[19] = {"SetDoorLeft:close;"};
 
 	bool quit = false;
 	char oldChoice = '\0';

@@ -29,8 +29,8 @@ class SchutState
 public:
 	SchutState(iDoor* door, iWaterSensor* waterSensor, iTrafficLight* trafficLight);
   void HandlePseudoState();
-  void HandleEvent(State* superState, Events* ev);
-  void ExitActions();
+  void HandleEvent(State* superState, Events ev);
+  void ExitSubStateActions();
 
 	SubState HandleCloseRightDoor(Events ev);
 	SubState HandleCloseLeftDoor(Events ev);
