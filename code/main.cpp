@@ -41,7 +41,7 @@ int main()
 	WaterSensor waterSensor(&cHandlerOne);
 	TrafficLight trafficLight(&cHandlerOne);
 	Sluice sluiceOne(door, waterSensor, trafficLight);
-	char messageToBeSent[12] = {"GetDoorLeft"};
+	char messageToBeSent[13] = {"GetDoorLeft;"};
 
 	bool quit = false;
 	char oldChoice = '\0';
@@ -55,7 +55,7 @@ int main()
 		switch (choice)
 		{
 		case '1':
-		std::cout << door.GetDoorStatus(messageToBeSent, 12) << std::endl;
+		std::cout << door.GetDoorStatus(messageToBeSent, 13) << std::endl;
 		break;
 		case 'q':
 			quit = true;

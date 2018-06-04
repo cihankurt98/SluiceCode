@@ -4,6 +4,8 @@
 #include <unistd.h> // close sock
 #include <stdexcept>
 
+#include <iostream> // test
+
 HardwareConnection::HardwareConnection(char ip[15], int port)
 {
 	socket_desc = socket(AF_INET, SOCK_STREAM, 0); // list met meerdere sockets voor meerdere connecties?
@@ -19,6 +21,7 @@ HardwareConnection::HardwareConnection(char ip[15], int port)
 	{
 		throw std::logic_error("connect is <= -1"); //nog catchen
 	}	
+	std::cout << "constructor voltooid" << std::endl;
 }
 
 HardwareConnection::~HardwareConnection()
@@ -30,10 +33,12 @@ std::string HardwareConnection::Transmit(char message[], int size,  int flags)
 {
 	if (send(socket_desc, message, size, flags) == -1)
 	{
+		std::cout << "fail message" << std::endl;
 		return NULL;
 	}
+	std::cout << "sent message" << std::endl;
 	const int receiveMessageSize = 20;
 	char receivedMessage[receiveMessageSize];
-	recv(socket_desc, receivedMessage, receiveMessageSize, flags);
+	recv(socket_desc, receivedMessage, receiveMessageSize, flags); // null checken later
 	return (std::string) receivedMessage;
 }
