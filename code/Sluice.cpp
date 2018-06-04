@@ -85,6 +85,7 @@ State Sluice::HandleStateSchutten(Events ev)
 						break;
 					default:
 						std::cerr << "ERROR: unhandled state with number: " << nextState;
+						break;
 				}
 			}
 
