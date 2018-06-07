@@ -27,23 +27,23 @@ enum ElevateWaterHighSubState
 class SchutState
 {
 public:
-	SchutState(iDoor* door, iWaterSensor* waterSensor, iTrafficLight* trafficLight);
+	SchutState(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight);
   void HandlePseudoState();
-  void HandleEvent(State* superState, Events ev);
+  void HandleEvent(State& superState, Events ev);
   void ExitSubStateActions();
 
 	SubState HandleCloseRightDoor(Events ev);
 	SubState HandleCloseLeftDoor(Events ev);
 	SubState HandleElevateWaterHigh(Events ev);
 	SubState HandleElevateWaterLow(Events ev);
-	SubState HandleOpenLeftDoor(Events ev);
-  SubState HandleOpenRightDoor(Events ev);
+	SubState HandleOpenLeftDoor(State& superState,Events ev);
+  SubState HandleOpenRightDoor(State& superState,Events ev);
 
 private:
 	SubState currentSubState;
-	iDoor* door;
-	iWaterSensor* waterSensor;
-	iTrafficLight* trafficLight;
+	iDoor& door;
+	iWaterSensor& waterSensor;
+	iTrafficLight& trafficLight;
 
 	void CloseRightDoorEntryActions();
 	void CloseRightDoorExitActions();

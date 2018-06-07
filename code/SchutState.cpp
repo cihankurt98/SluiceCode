@@ -1,47 +1,39 @@
 #include "SchutState.h"
 #include <iostream>
 
-SchutState::SchutState(iDoor* door, iWaterSensor* waterSensor, iTrafficLight* trafficLight)
+SchutState::SchutState(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight)
+: door(door)
+, waterSensor(waterSensor)
+, trafficLight(trafficLight)
 {
 	// TODO - implement SchutState::SchutState
-  this->door = door;
-  this->waterSensor = waterSensor;
-  this->trafficLight = trafficLight;
+
 }
 
 void SchutState::HandlePseudoState()
 {
 	// TODO - implement SchutState::HandlePseudoState
-
+  // check doorstatus and act accordingly to state machine
   currentSubState = CloseRightDoor;
   CloseRightDoorEntryActions();
 }
 
-void SchutState::HandleEvent(State* superState, Events ev)
+void SchutState::HandleEvent(State& superState, Events ev)
 {
-	if (superState == NULL)
-	{
-		std::cout << "kanker zooi" << std::endl;
-	}
-	else
-	{
-		std::cout << "yeuy niet null" << std::endl;
-	}
-
   switch (currentSubState) {
     case CloseRightDoor:
-      currentSubState = HandleOpenRightDoor(ev);
+      currentSubState = HandleCloseRightDoor(ev);
       break;
     case CloseLeftDoor:
-      currentSubState = HandleOpenLeftDoor(ev);
+      currentSubState = HandleCloseLeftDoor(ev);
     case ElevateWaterHigh:
       currentSubState = HandleElevateWaterHigh(ev);
     case ElevateWaterLow:
       currentSubState = HandleElevateWaterLow(ev);
     case OpenLeftDoor:
-      currentSubState = HandleOpenLeftDoor(ev);
+      currentSubState = HandleOpenLeftDoor(superState,ev);
     case OpenRightDoor:
-      currentSubState = HandleOpenRightDoor(ev);
+      currentSubState = HandleOpenRightDoor(superState,ev);
 
     default:
     std::cerr << "ERROR: illegal/unhandled running substate with number: " << currentSubState;
@@ -55,6 +47,30 @@ void SchutState::HandleEvent(State* superState, Events ev)
 void SchutState::ExitSubStateActions()
 {
 	// TODO - implement SchutState::ExitActions
+  switch (currentSubState)
+  {
+    case CloseRightDoor:
+      CloseRightDoorExitActions();
+      break;
+    case CloseLeftDoor:
+      CloseLeftDoorExitActions();
+      break;
+    case ElevateWaterLow:
+      ElevateWaterLowExitActions();
+      break;
+    case ElevateWaterHigh:
+      ElevateWaterHighExitActions();
+      break;
+    case OpenLeftDoor:
+      OpenLeftDoorExitActions();
+      break;
+    case OpenRightDoor:
+      OpenRightDoorExitActions();
+      break;
+
+    default:
+      break;
+  }
 }
 SubState SchutState::HandleCloseRightDoor(Events ev)
 {
@@ -133,38 +149,36 @@ switch (ev)
 return nextSubState;
 }
 
-SubState SchutState::HandleOpenLeftDoor(Events ev)
+SubState SchutState::HandleOpenLeftDoor(State& superState,Events ev)
 {
   SubState nextSubState = CloseRightDoor;
 switch (ev)
 {
   case EV_LEFTDOOROPENED:
-    CloseRightDoorExitActions();
-
-    //check waterlevel to determine te elevation direction
-    nextSubState = ElevateWaterLow;
-    ElevateWaterLowEntryActions();
+    OpenLeftDoorExitActions();
+    superState = Idle;
     break;
+
   default:
+
     break;
 }
 
 
 return nextSubState;
 }
-SubState SchutState::HandleOpenRightDoor(Events ev)
+SubState SchutState::HandleOpenRightDoor(State& superState,Events ev)
 {
   SubState nextSubState = CloseRightDoor;
 switch (ev)
 {
-  case EV_RIGHTDOORCLOSED:
-    CloseRightDoorExitActions();
-
-    //check waterlevel to determine te elevation direction
-    nextSubState = ElevateWaterLow;
-    ElevateWaterLowEntryActions();
+  case EV_RIGHTDOOROPENED:
+    OpenRightDoorExitActions();
+    superState = Idle;
     break;
+
   default:
+
     break;
 }
 

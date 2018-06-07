@@ -37,8 +37,6 @@ private:
 	void EmergencyExitActions();
 
 
-	//Sluice(const Sluice& other): door(other.door), waterSensor(other.waterSensor), trafficLight(other.trafficLight), lock(other.lock){};
-	Sluice& operator= (const Sluice&) {return *this; };
 };
 
 #endif

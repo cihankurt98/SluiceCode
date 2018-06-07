@@ -14,6 +14,7 @@ bool TrafficLight::SetTrafficLightStatus(char message[], int size)
 {
 	if ("ack" != hardwareConnection->Transmit(message, size, 0))
 	{
+
 		return false;
 	}
 	return true;
