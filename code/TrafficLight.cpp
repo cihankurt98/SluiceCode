@@ -5,13 +5,15 @@ TrafficLight::TrafficLight(HardwareConnection* const hardwareConnection)
 	this->hardwareConnection = hardwareConnection;
 }
 
-std::string TrafficLight::GetTrafficLightStatus(char message[], int size)
+std::string TrafficLight::GetTrafficLightStatus(char message[])
 {
+	int size = strlen(message);
 	return hardwareConnection->Transmit(message, size, 0);
 }
 
-bool TrafficLight::SetTrafficLightStatus(char message[], int size)
+bool TrafficLight::SetTrafficLightStatus(char message[])
 {
+	int size = strlen(message);
 	if ("ack" != hardwareConnection->Transmit(message, size, 0))
 	{
 

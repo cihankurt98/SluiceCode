@@ -8,9 +8,8 @@ class iDoor
 public:
 	virtual ~iDoor(){};
 
-	std::string GetDoorStatus(char message[]);
-
-	bool SetDoorStatus(char message[]);
+	virtual std::string GetDoorStatus(char message[]) = 0;
+	virtual bool SetDoorStatus(char message[]) = 0;
 };
 
 #endif

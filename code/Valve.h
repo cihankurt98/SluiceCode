@@ -8,9 +8,9 @@ class Valve : public iValve
 {
 public:
 	Valve(HardwareConnection* const hardwareConnection);
-	std::string GetValveStatus(char message[], int size);
+	std::string GetValveStatus(char message[]);
 
-	bool SetValveStatus(char message[], int size);
+	bool SetValveStatus(char message[]);
 
 private:
 	HardwareConnection* hardwareConnection;

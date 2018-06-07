@@ -5,12 +5,12 @@ class iTimer {
 
 
 public:
-	virtual ~iTimer();
-	void setTime();
+	virtual ~iTimer(){};
+	virtual void setTime() = 0;
 
-	void Cancel();
+	virtual void Cancel() = 0;
 
-	bool isTimeout();
+	virtual bool isTimeout() = 0;
 };
 
 #endif

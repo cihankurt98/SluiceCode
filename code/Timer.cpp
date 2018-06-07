@@ -1,16 +1,18 @@
 #include "Timer.h"
+#include <iostream>
 
-void Timer::setTime() {
-	// TODO - implement Timer::setTime
-	throw "Not yet implemented";
+void Timer::setTime()
+{
+	std::cout << "SettimeCompileFix" << std::endl;
 }
 
-void Timer::Cancel() {
-	// TODO - implement Timer::Cancel
-	throw "Not yet implemented";
+void Timer::Cancel()
+{
+	std::cout << "CancelCompileFix" << std::endl;
 }
 
-bool Timer::isTimeout() {
-	// TODO - implement Timer::isTimeout
-	throw "Not yet implemented";
+bool Timer::isTimeout()
+{
+	std::cout << "isTimeOutCompileFix" << std::endl;
+	return true;
 }

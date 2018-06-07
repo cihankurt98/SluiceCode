@@ -2,6 +2,7 @@
 #include "Watersensor.h"
 #include "TrafficLight.h"
 #include "HardwareConnection.h"
+#include "Valve.h"
 #include "Sluice.h"
 
 

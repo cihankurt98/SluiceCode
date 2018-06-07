@@ -3,11 +3,11 @@
 #include <cstddef>
 
 Sluice::Sluice(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight)
-	 //: currentState(Idle)
-	 : door(door)
-	 , waterSensor(waterSensor)
-	 , trafficLight(trafficLight)
-	 , schutState(new SchutState(door, waterSensor, trafficLight))
+//: currentState(Idle)
+	: door(door)
+	, waterSensor(waterSensor)
+	, trafficLight(trafficLight)
+	, schutState(new SchutState(door, waterSensor, trafficLight))
 {
 	IdleEntryActions();
 }
@@ -22,14 +22,14 @@ State Sluice::HandleStateIdle(Events ev)
 
 	switch (ev)
 	{
-		case EV_SCHUTSTART:
-			IdleExitActions();
-			nextState = Schutten;
-			SchuttenEntryActions();
-		default:
-			//ignored event, nothing to do here.
-			// Don't do anything when another event is called.
-			break;
+	case EV_SCHUTSTART:
+		IdleExitActions();
+		nextState = Schutten;
+		SchuttenEntryActions();
+	default:
+		//ignored event, nothing to do here.
+		// Don't do anything when another event is called.
+		break;
 	}
 	return nextState;
 }
@@ -40,11 +40,11 @@ State Sluice::HandleStateEmergency(Events ev)
 
 	switch (ev)
 	{
-		case EV_RESUME:
+	case EV_RESUME:
 		break; //was return 0;
 
-		default:
-			break;
+	default:
+		break;
 
 	}
 	return nextState;
@@ -56,39 +56,39 @@ State Sluice::HandleStateSchutten(Events ev)
 
 	switch (ev)
 	{
-		//handle on Schutten level
-		case EV_RIGHTDOOROPENED:
+	//handle on Schutten level
+	case EV_RIGHTDOOROPENED:
+		SchuttenExitActions();
+
+		nextState = Idle;
+		IdleEntryActions();
+		break;
+
+	case EV_LEFTDOOROPENED:
+		SchuttenExitActions();
+
+		nextState = Idle;
+		break;
+
+	//Schutten substates below
+	default:
+		schutState->HandleEvent(nextState, ev);
+		if (nextState != Schutten)
+		{
 			SchuttenExitActions();
-
-			nextState = Idle;
-			IdleEntryActions();
-			break;
-
-		case EV_LEFTDOOROPENED:
-			SchuttenExitActions();
-
-			nextState = Idle;
-			break;
-
-		//Schutten substates below
-		default:
-			schutState->HandleEvent(nextState, ev);
-			if (nextState != Schutten)
+			switch (nextState)
 			{
-				SchuttenExitActions();
-				switch (nextState)
-				{
-					case EV_EMERGENCY:
-						nextState = Emergency;
-						EmergencyEntryActions();
-						break;
-					default:
-						std::cerr << "ERROR: unhandled state with number: " << nextState;
-						break;
-				}
+			case EV_EMERGENCY:
+				nextState = Emergency;
+				EmergencyEntryActions();
+				break;
+			default:
+				std::cerr << "ERROR: unhandled state with number: " << nextState;
+				break;
 			}
+		}
 
-			break;
+		break;
 
 	}
 	return nextState;
@@ -104,14 +104,23 @@ void Sluice::IdleExitActions()
 {
 	//TODO: CHECK BOTH DOOR STATUS AND CLOSE THEM IF THEY ARE OPENED
 	char message1[] = {"GetDoorLeft;"};
-	//char message2[] = {"GetDoorRight;"};
+	char message2[] = {"GetDoorRight;"};
 	if (door.GetDoorStatus(message1) == "DoorOpen;")
 	{
-		char closemessage[] = {"SetDoorLeft:Close;"};
+		char closemessage[] = {"SetDoorLeft:close;"};
 		if (door.SetDoorStatus(closemessage) == true)
 		{
 			std::cout << "Left door was open, is now closing" << std::endl;
 		}
+	}
+	if (door.GetDoorStatus(message2) == "DoorOpen;")
+	{
+		char closemessage[] = {"SetDoorRight:close;"};
+		if (door.SetDoorStatus(closemessage) == true)
+		{
+			std::cout << "Left door was open, is now closing" << std::endl;
+		}
+
 	}
 }
 void Sluice::SchuttenEntryActions()

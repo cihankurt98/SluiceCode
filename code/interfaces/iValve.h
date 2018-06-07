@@ -1,13 +1,15 @@
 #ifndef IVALVE_H
 #define IVALVE_H
 
+#include <string>
+
 class iValve 
 {
 public:
 	virtual ~iValve(){};
-	void GetValveStatus();
+	virtual std::string GetValveStatus(char message[]) = 0;
 
-	void SetValveStatus();
+	virtual bool SetValveStatus(char message[]) = 0;
 };
 
 #endif
