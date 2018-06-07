@@ -45,6 +45,7 @@ private:
 	iDoor& door;
 	iWaterSensor& waterSensor;
 	iTrafficLight& trafficLight;
+	void HandleElevateHighSubstates(ElevateWaterHighSubState& elevateState,Events ev);
 
 	void CloseRightDoorEntryActions();
 	void CloseRightDoorExitActions();

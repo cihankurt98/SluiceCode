@@ -65,6 +65,7 @@ void Sluice::HandleEvent(Events ev) {
 
 	State Sluice::HandleStateSchutten(Events ev) {
 		State nextState = Schutten;
+		ElevateWaterHighSubState elevateState;
 
 		switch (ev) {
 			//handle on Schutten level
@@ -83,7 +84,7 @@ void Sluice::HandleEvent(Events ev) {
 
 				//Schutten substates below
 			default:
-				schutState->HandleEvent(nextState, ev);
+				schutState->HandleEvent(nextState,elevateState, ev);
 				if (nextState != Schutten) {
 					SchuttenExitActions();
 					switch (nextState) {

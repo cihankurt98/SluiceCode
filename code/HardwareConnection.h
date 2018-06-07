@@ -12,7 +12,7 @@
 #include "interfaces/iTrafficLight.h"
 
 
-class HardwareConnection : public iDoor, public iWaterSensor, public iTrafficLight
+class HardwareConnection : public iDoor, public iValve, public iWaterSensor, public iTrafficLight, public iLock
 {
 
   public:
@@ -44,8 +44,6 @@ class HardwareConnection : public iDoor, public iWaterSensor, public iTrafficLig
 	int socket_desc;
 	struct sockaddr_in simulator;
 	// private copy constructor and assignment operator to prevent making copies
-	HardwareConnection(const HardwareConnection&) { /* do nothing */ };
-	HardwareConnection& operator=(const HardwareConnection&) { return *this; };
 };
 
 #endif

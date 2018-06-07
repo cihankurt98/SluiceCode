@@ -116,19 +116,24 @@ switch (ev)
 
 return nextSubState;
 }
+
 SubState SchutState::HandleElevateWaterHigh(ElevateWaterHighSubState& elevateState,Events ev)
 {
   SubState nextSubState = ElevateWaterHigh;
+  HandleElevateHighSubstates(elevateState,ev);
+  OpenValve3ExitActions();
 switch (ev)
 {
   case EV_WATER_HIGH:
     ElevateWaterHighExitActions();
-    elevateState = OpenValve1;
+
 
     nextSubState = OpenRightDoor;
     OpenRightDoorEntryActions();
     break;
+
   default:
+
     break;
 }
 
@@ -195,6 +200,27 @@ return nextSubState;
 
 
 //PRIVATE methods
+void SchutState::HandleElevateHighSubstates(ElevateWaterHighSubState& elevateState,Events ev)
+{
+  elevateState = OpenValve1;
+  switch (ev)
+  {
+    case EV_WATERLEVEL_ABOVE_VALVE2:
+      OpenValve1ExitActions();
+
+          elevateState = OpenValve2;
+          OpenValve2EntryActions();
+          break;
+    case EV_WATERLEVEL_ABOVE_VALVE3:
+      OpenValve2ExitActions();
+
+          elevateState = OpenValve3;
+          OpenValve3EntryActions();
+    default:
+      break;
+
+  }
+}
 
 void SchutState::CloseRightDoorEntryActions()
 {
@@ -219,6 +245,30 @@ void SchutState::ElevateWaterHighEntryActions()
 {
   //ENTRY: lowest valve open
 
+}
+void SchutState::OpenValve1EntryActions()
+{
+  //do nothing
+}
+void SchutState::OpenValve1ExitActions()
+{
+  //do nothing
+}
+void SchutState::OpenValve2EntryActions()
+{
+  //open middle valve
+}
+void SchutState::OpenValve2ExitActions()
+{
+  //do nothing
+}
+void SchutState::OpenValve3EntryActions()
+{
+  //open highest valve
+}
+void SchutState::OpenValve3ExitActions()
+{
+  //do nothing
 }
 void SchutState::ElevateWaterHighExitActions()
 {

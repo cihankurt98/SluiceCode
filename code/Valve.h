@@ -1,22 +1,16 @@
 #ifndef VALVE_H
 #define VALVE_H
 
-#include "HardwareConnection.h"
 #include "interfaces/iValve.h"
 
-class Valve : public iValve
+class Valve
+
 {
 public:
-	Valve(HardwareConnection* const hardwareConnection);
-	std::string GetValveStatus(char message[]);
-
-	bool SetValveStatus(char message[]);
-
+	Valve(iValve& valve);
+	std::string GetDoorValveStatus(char message[]);
+	bool SetDoorValveStatus(char message[]);
 private:
-	HardwareConnection* hardwareConnection;
-	// private copy constructor and assignment operator to prevent making copies
-	Valve(const Valve&) { /* do nothing */ };
-	Valve& operator=(const Valve&) { return *this; };
+	iValve& valve;
 };
-
 #endif

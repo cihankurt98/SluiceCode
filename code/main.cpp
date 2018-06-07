@@ -2,7 +2,6 @@
 #include "Watersensor.h"
 #include "TrafficLight.h"
 #include "HardwareConnection.h"
-#include "Valve.h"
 #include "Sluice.h"
 
 
@@ -52,10 +51,16 @@ int main(int argc, char* argv[])
 	int port = atoi(std::string(argv[1]).c_str());
 
 	HardwareConnection* cHandler = new HardwareConnection(ip, port);
-
 	Door* door = new Door(cHandler, cHandler, cHandler);
+
+	if (door)
+	{
+		std::cout << "kaaaankeerrrrr" << std::endl;
+	}
+	
+
 	//Sluice sluice = new Sluice (door);
-	char messageToBeSent[13] = {"GetDoorLeft;"}; //test
+	//char messageToBeSent[13] = {"GetDoorLeft;"}; //test
 
 	bool quit = false;
 	char oldChoice = '\0';
@@ -79,7 +84,7 @@ int main(int argc, char* argv[])
 			4)Kwamen de boten van de laagwaterkant, dan worden de kleppen in de hoogwaterdeuren
 			opengezet zodat het water in de sluis stijgt tot het hoog
 			water niveau.*/
-			std::cout << door.GetDoorStatus(messageToBeSent) << std::endl;
+			//std::cout << door->GetDoorStatus(messageToBeSent) << std::endl;
 			break;
 		case '2':
 			//std::cout << door.GetDoorStatus(messageToBeSent, 19) << std::endl;

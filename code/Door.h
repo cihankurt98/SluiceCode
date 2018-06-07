@@ -9,8 +9,7 @@ class Door
 
 {
 public:
-	Door(iDoor& door, iValve& valve, iLock& lock);
-
+	Door(iDoor* door, iValve* valve, iLock* lock);
 	//iDoor
 	std::string GetDoorStatus(char message[]);
 	bool SetDoorStatus(char message[]);
@@ -19,9 +18,9 @@ public:
 	bool SetLockStatus(char message[]);
 
 private:
-	iDoor& door;
-	iValve& valve;
-	iLock& lock;
-};
+	iDoor* door;
+	iValve* valve;
+	iLock* lock;
 
+};
 #endif
