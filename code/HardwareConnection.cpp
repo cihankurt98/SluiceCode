@@ -20,7 +20,7 @@ HardwareConnection::HardwareConnection(char ip[15], int port)
 	if (connect(socket_desc, (struct sockaddr *)&simulator, sizeof(simulator)) < 0)
 	{
 		throw std::logic_error("connect is <= -1"); //nog catchen
-	}	
+	}
 	std::cout << "constructor voltooid" << std::endl;
 }
 
@@ -48,4 +48,74 @@ std::string HardwareConnection::Transmit(char message[], int size,  int flags)
 	}
 	receivedMessage[actualSize] = '\0';
 	return (std::string) receivedMessage;
+}
+
+std::string HardwareConnection::GetDoorStatus(char message[])
+{
+	int size = strlen(message);
+	return Transmit(message, size, 0);
+}
+
+bool HardwareConnection::SetDoorStatus(char message[])
+{
+	int size = strlen(message);
+	if ("ack" != Transmit(message, size, 0))
+	{
+		return false;
+	}
+	return true;
+}
+
+std::string HardwareConnection::GetValveStatus(char message[])
+{
+	int size = strlen(message);
+	return Transmit(message, size, 0);
+}
+
+bool HardwareConnection::SetValveStatus(char message[])
+{
+	int size = strlen(message);
+	if ("ack" != Transmit(message, size, 0))
+	{
+		return false;
+	}
+	return true;
+}
+
+std::string HardwareConnection::GetLockStatus(char message[])
+{
+	int size = strlen(message);
+	return Transmit(message, size, 0);
+}
+
+bool HardwareConnection::SetLockStatus(char message[])
+{
+	int size = strlen(message);
+	if ("ack" != Transmit(message, size, 0))
+	{
+		return false;
+	}
+	return true;
+}
+
+std::string HardwareConnection::GetWaterLevel(char message[])
+{
+	int size = strlen(message);
+	return Transmit(message, size, 0);
+}
+
+std::string HardwareConnection::GetTrafficLightStatus(char message[])
+{
+	int size = strlen(message);
+	return Transmit(message, size, 0);
+}
+
+bool HardwareConnection::SetTrafficLightStatus(char message[])
+{
+	int size = strlen(message);
+	if ("ack" != Transmit(message, size, 0))
+	{
+		return false;
+	}
+	return true;
 }

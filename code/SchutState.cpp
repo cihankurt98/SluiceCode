@@ -6,19 +6,24 @@ SchutState::SchutState(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& tr
 , waterSensor(waterSensor)
 , trafficLight(trafficLight)
 {
-	// TODO - implement SchutState::SchutState
 
 }
 
 void SchutState::HandlePseudoState()
 {
 	// TODO - implement SchutState::HandlePseudoState
+
+
+
+
+
+  //DIT KLOPT NOT NIET. DIT MOET DE CHOICE BLOCK AAN HET BEGIN VOORSTELLEN
   // check doorstatus and act accordingly to state machine
   currentSubState = CloseRightDoor;
   CloseRightDoorEntryActions();
 }
 
-void SchutState::HandleEvent(State& superState, Events ev)
+void SchutState::HandleEvent(State& superState, ElevateWaterHighSubState& elevateState, Events ev)
 {
   switch (currentSubState) {
     case CloseRightDoor:
@@ -27,7 +32,7 @@ void SchutState::HandleEvent(State& superState, Events ev)
     case CloseLeftDoor:
       currentSubState = HandleCloseLeftDoor(ev);
     case ElevateWaterHigh:
-      currentSubState = HandleElevateWaterHigh(ev);
+      currentSubState = HandleElevateWaterHigh(elevateState,ev);
     case ElevateWaterLow:
       currentSubState = HandleElevateWaterLow(ev);
     case OpenLeftDoor:
@@ -111,13 +116,14 @@ switch (ev)
 
 return nextSubState;
 }
-SubState SchutState::HandleElevateWaterHigh(Events ev)
+SubState SchutState::HandleElevateWaterHigh(ElevateWaterHighSubState& elevateState,Events ev)
 {
   SubState nextSubState = ElevateWaterHigh;
 switch (ev)
 {
   case EV_WATER_HIGH:
     ElevateWaterHighExitActions();
+    elevateState = OpenValve1;
 
     nextSubState = OpenRightDoor;
     OpenRightDoorEntryActions();
@@ -192,49 +198,53 @@ return nextSubState;
 
 void SchutState::CloseRightDoorEntryActions()
 {
+  //ENTRY: rightdoor.close();
 
+  //leftdoor trafficlights red
 }
 void SchutState::CloseRightDoorExitActions()
 {
-
+  //nothing
 }
 void SchutState::CloseLeftDoorEntryActions()
 {
-
+  //ENTRY: leftdoor.close;
+  //leftdoor trafficlights red
 }
 void SchutState::CloseLeftDoorExitActions()
 {
-
+  //nothing
 }
 void SchutState::ElevateWaterHighEntryActions()
 {
+  //ENTRY: lowest valve open
 
 }
 void SchutState::ElevateWaterHighExitActions()
 {
-
+  //EXIT: close all valves
 }
 void SchutState::ElevateWaterLowEntryActions()
 {
-
+  //ENTRY: open lowest valve
 }
 void SchutState::ElevateWaterLowExitActions()
 {
-
+  //EXIT: close lowest valve
 }
 void SchutState::OpenLeftDoorEntryActions()
 {
-
+  //Leftdoor.open
 }
 void SchutState::OpenLeftDoorExitActions()
 {
-
+  //leftdoor trafficlights green
 }
 void SchutState::OpenRightDoorEntryActions()
 {
-
+  //Rightdoor.open
 }
 void SchutState::OpenRightDoorExitActions()
 {
-
+  //rightdoor trafficlights green
 }

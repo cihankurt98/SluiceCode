@@ -29,18 +29,19 @@ class SchutState
 public:
 	SchutState(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight);
   void HandlePseudoState();
-  void HandleEvent(State& superState, Events ev);
+  void HandleEvent(State& superState, ElevateWaterHighSubState& elevateState, Events ev);
   void ExitSubStateActions();
 
 	SubState HandleCloseRightDoor(Events ev);
 	SubState HandleCloseLeftDoor(Events ev);
-	SubState HandleElevateWaterHigh(Events ev);
+	SubState HandleElevateWaterHigh(ElevateWaterHighSubState& elevateState,Events ev);
 	SubState HandleElevateWaterLow(Events ev);
 	SubState HandleOpenLeftDoor(State& superState,Events ev);
   SubState HandleOpenRightDoor(State& superState,Events ev);
 
 private:
 	SubState currentSubState;
+	ElevateWaterHighSubState elevateState;
 	iDoor& door;
 	iWaterSensor& waterSensor;
 	iTrafficLight& trafficLight;
@@ -50,6 +51,12 @@ private:
 	void CloseLeftDoorEntryActions();
 	void CloseLeftDoorExitActions();
 	void ElevateWaterHighEntryActions();
+	void OpenValve1EntryActions();
+	void OpenValve1ExitActions();
+	void OpenValve2EntryActions();
+	void OpenValve2ExitActions();
+	void OpenValve3EntryActions();
+	void OpenValve3ExitActions();
 	void ElevateWaterHighExitActions();
 	void ElevateWaterLowEntryActions();
 	void ElevateWaterLowExitActions();

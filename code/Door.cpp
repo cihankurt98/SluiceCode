@@ -1,54 +1,37 @@
 #include "Door.h"
+#include <iostream>
 
-Door::Door(HardwareConnection* const hardwareConnection) //not allowed to modify ptr
+Door::Door(iDoor& door, iValve& valve, iLock& lock)
+	: door(door),
+	  valve(valve),
+	  lock(lock)
 {
-	this->hardwareConnection = hardwareConnection;
+
 }
+
 
 std::string Door::GetDoorStatus(char message[])
 {
-	int size = strlen(message);
-	return hardwareConnection->Transmit(message, size, 0);
+	return door.GetDoorStWatus(message);
 }
 
 bool Door::SetDoorStatus(char message[])
 {
-	int size = strlen(message);
-	if ("ack" != hardwareConnection->Transmit(message, size, 0))
-	{
-		return false;
-	}
-	return true;
+	return door.SetDoorStatus(message);
 }
 
-std::string Door::GetValveStatus(char message[])
+std::string Door::GetDoorValveStatus(char message[])
 {
-	int size = strlen(message);
-	return hardwareConnection->Transmit(message, size, 0);
+	return valve.GetValveStatus(message);
 }
 
-bool Door::SetValveStatus(char message[])
+bool Door::SetDoorValveStatus(char message[])
 {
-	int size = strlen(message);
-	if ("ack" != hardwareConnection->Transmit(message, size, 0))
-	{
-		return false;
-	}
-	return true;
-}
-
-std::string Door::GetLockStatus(char message[])
-{
-	int size = strlen(message);
-	return hardwareConnection->Transmit(message, size, 0);
+	return valve.SetValveStatus(message);
 }
 
 bool Door::SetLockStatus(char message[])
 {
-	int size = strlen(message);
-	if ("ack" != hardwareConnection->Transmit(message, size, 0))
-	{
-		return false;
-	}
-	return true;
+	return lock.SetLockStatus(message);
 }
+
