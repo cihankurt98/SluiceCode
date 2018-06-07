@@ -2,6 +2,7 @@
 #define HARDWARECONNECTION_H
 
 #include <string>
+#include <string.h> //voor strlen in door etc.
 #include <arpa/inet.h>
 
 class HardwareConnection

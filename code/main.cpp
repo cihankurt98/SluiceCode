@@ -4,6 +4,8 @@
 #include "HardwareConnection.h"
 #include "Sluice.h"
 
+
+#include <stdlib.h>
 #include <iostream>
 
 
@@ -11,7 +13,11 @@ static void ShowMenu( void )
 {
 	std::cerr << ("\n\nMenu\n");
 	std::cerr << ("====\n");
-	std::cerr << ("(1) CreateConnection Sluice 1\n");
+	std::cerr << ("(1) Start\n");
+	std::cerr << ("(2) Vrijgeven voor uitvaren\n");
+	std::cerr << ("(3) Vrijgeven voor invaren\n");
+	std::cerr << ("(4) Alarm\n");
+	std::cerr << ("(5) Reset\n");
 	std::cerr << ("-----------------------\n");
 	std::cerr << ("(q) QUIT\n");
 	std::cerr << ("Enter: repeat previous choice\n\n");
@@ -33,16 +39,25 @@ char GetUserInput(char oldChoice)
 	return choice;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+	if (argc < 2)
+	{
+		std::cout << "Do this: ./sluice [PORT]" << std::endl;
+		return 0;
+	}
+	std::cout << argv[1] << std::endl;
 	char ip[] = {"127.0.0.1"};
-	HardwareConnection cHandlerOne(ip, 5555);
+	int port = atoi(std::string(argv[1]).c_str());
+
+
+	HardwareConnection cHandlerOne(ip, port);
 	Door door(&cHandlerOne);
 	WaterSensor waterSensor(&cHandlerOne);
 	TrafficLight trafficLight(&cHandlerOne);
-	Sluice sluiceOne(door, waterSensor,trafficLight);
+	Sluice sluiceOne(door, waterSensor, trafficLight);
 
-	//char messageToBeSent[19] = {"SetDoorLeft:open;"}; //test
+	char messageToBeSent[13] = {"GetDoorLeft;"}; //test
 
 	bool quit = false;
 	char oldChoice = '\0';
@@ -56,8 +71,30 @@ int main()
 		switch (choice)
 		{
 		case '1':
-		//std::cout << door.GetDoorStatus(messageToBeSent, 19) << std::endl;
-		break;
+			/*
+			1)De sluiswachter beslist of de sluis geschut wordt, hij heeft hiervoor per sluis een knop “start”.
+			2)De geopende deuren van sluis, daar waar de waterstand aan beide zijden gelijk is, worden dan
+			gesloten.
+			3)Kwamen de boten van de hoogwaterkant, dan worden kleppen in de laagwaterdeuren open gez
+			et zodat het water in de sluis zakt tot het laagwaterniveau. Vervolgens worden de deuren aan
+			laagwaterzijde geopend.
+			4)Kwamen de boten van de laagwaterkant, dan worden de kleppen in de hoogwaterdeuren
+			opengezet zodat het water in de sluis stijgt tot het hoog
+			water niveau.*/
+		std::cout << door.GetDoorStatus(messageToBeSent) << std::endl;
+			break;
+		case '2':
+			//std::cout << door.GetDoorStatus(messageToBeSent, 19) << std::endl;
+			break;
+		case '3':
+			//std::cout << door.GetDoorStatus(messageToBeSent, 19) << std::endl;
+			break;
+		case '4':
+			//std::cout << door.GetDoorStatus(messageToBeSent, 19) << std::endl;
+			break;
+		case '5':
+			//std::cout << door.GetDoorStatus(messageToBeSent, 19) << std::endl;
+			break;
 		case 'q':
 			quit = true;
 			break;

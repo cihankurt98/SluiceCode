@@ -37,8 +37,15 @@ std::string HardwareConnection::Transmit(char message[], int size,  int flags)
 		return NULL;
 	}
 	std::cout << "sent message" << std::endl;
-	const int receiveMessageSize = 20;
-	char receivedMessage[receiveMessageSize];
-	recv(socket_desc, receivedMessage, receiveMessageSize, flags); // null checken later
+	const int bufferSize = 20;
+	char receivedMessage[bufferSize];
+
+	int actualSize = recv(socket_desc, receivedMessage, bufferSize, flags);
+
+	if (actualSize <= 0)
+	{
+		throw std::logic_error("Niks ontvangen"); //nog catchen
+	}
+	receivedMessage[actualSize] = '\0';
 	return (std::string) receivedMessage;
 }

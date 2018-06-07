@@ -103,6 +103,16 @@ void Sluice::IdleEntryActions()
 void Sluice::IdleExitActions()
 {
 	//TODO: CHECK BOTH DOOR STATUS AND CLOSE THEM IF THEY ARE OPENED
+	char message1[] = {"GetDoorLeft;"};
+	//char message2[] = {"GetDoorRight;"};
+	if (door.GetDoorStatus(message1) == "DoorOpen;")
+	{
+		char closemessage[] = {"SetDoorLeft:Close;"};
+		if (door.SetDoorStatus(closemessage) == true)
+		{
+			std::cout << "Left door was open, is now closing" << std::endl;
+		}
+	}
 }
 void Sluice::SchuttenEntryActions()
 {

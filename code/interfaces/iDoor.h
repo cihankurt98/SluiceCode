@@ -1,14 +1,16 @@
 #ifndef IDOOR_H
 #define IDOOR_H
 
+#include <string>
+
 class iDoor
 {
 public:
 	virtual ~iDoor(){};
 
-	void GetDoorStatus();
+	std::string GetDoorStatus(char message[]);
 
-	void SetDoorStatus();
+	bool SetDoorStatus(char message[]);
 };
 
 #endif

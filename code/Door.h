@@ -11,13 +11,13 @@ class Door : public iDoor, public iValve, public iLock
 {
 public:
 	Door(HardwareConnection* const hardwareConnection);
-	std::string GetDoorStatus(char message[], int size);
+	std::string GetDoorStatus(char message[]);
 
-	bool SetDoorStatus(char message[], int size);
+	bool SetDoorStatus(char message[]);
 
-	std::string GetLockStatus(char message[], int size);
+	std::string GetLockStatus(char message[]);
 
-	bool SetLockStatus(char message[], int size);
+	bool SetLockStatus(char message[]);
 private:
 	HardwareConnection* hardwareConnection;
 	// private copy constructor and assignment operator to prevent making copies
