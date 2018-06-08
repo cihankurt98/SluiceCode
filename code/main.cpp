@@ -50,13 +50,11 @@ int main(int argc, char* argv[])
 	char ip[] = {"127.0.0.1"};
 	int port = atoi(std::string(argv[1]).c_str());
 
-	HardwareConnection* cHandler = new HardwareConnection(ip, port);
-	Door* door = new Door(cHandler, cHandler, cHandler);
-
-	if (door)
-	{
-		std::cout << "kaaaankeerrrrr" << std::endl;
-	}
+	HardwareConnection cHandler(ip, port);
+	WaterSensor waterSensor(cHandler);
+	TrafficLight trafficLight(cHandler);
+	Door door(cHandler, cHandler);
+	Sluice* sluice = new Sluice(cHandler, cHandler, cHandler);
 	
 
 	//Sluice sluice = new Sluice (door);
