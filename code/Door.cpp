@@ -1,7 +1,8 @@
 #include "Door.h"
 
-Door::Door(HardwareConnection& hardwareConnection)
-: hardwareConnection(hardwareConnection)
+Door::Door(HardwareConnection& hardwareConnection, iValve& valve)
+	: hardwareConnection(hardwareConnection),
+	  valve(valve)
 {
 }
 
@@ -21,34 +22,13 @@ bool Door::SetDoorStatus(char message[])
 	return true;
 }
 
-std::string Door::GetValveStatus(char message[])
-{
-	int size = strlen(message);
-	return hardwareConnection.Transmit(message, size, 0);
-}
-
 bool Door::SetValveStatus(char message[])
 {
-	int size = strlen(message);
-	if ("ack" != hardwareConnection.Transmit(message, size, 0))
-	{
-		return false;
-	}
-	return true;
+	return valve.SetValveStatus(message);
 }
 
-std::string Door::GetLockStatus(char message[])
+std::string Door::GetValveStatus(char message[])
 {
-	int size = strlen(message);
-	return hardwareConnection.Transmit(message, size, 0);
+	return valve.GetValveStatus(message);
 }
 
-bool Door::SetLockStatus(char message[])
-{
-	int size = strlen(message);
-	if ("ack" != hardwareConnection.Transmit(message, size, 0))
-	{
-		return false;
-	}
-	return true;
-}

@@ -53,7 +53,8 @@ int main(int argc, char* argv[])
 
 
 	HardwareConnection tcp(ip, port);
-	Door door(tcp);
+	Valve valve(tcp);
+	Door door(tcp, valve);
 	WaterSensor waterSensor(tcp);
 	TrafficLight trafficLight(tcp);
  	Sluice sluiceOne(door, waterSensor, trafficLight);

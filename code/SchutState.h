@@ -66,5 +66,7 @@ private:
 	void OpenRightDoorEntryActions();
 	void OpenRightDoorExitActions();
 
+	void LeftDoorLightsRed();
+
 };
 #endif

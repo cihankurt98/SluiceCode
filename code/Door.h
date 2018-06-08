@@ -4,29 +4,22 @@
 #include "HardwareConnection.h"
 #include "interfaces/iDoor.h"
 #include "interfaces/iValve.h"
-#include "interfaces/iLock.h"
 
-class Door : public iDoor, public iValve, public iLock
+class Door : public iDoor
 
 {
 public:
-	//
-	Door(HardwareConnection& hardwareConnection);
+	Door(HardwareConnection& hardwareConnection, iValve& valve);
 
 	//iDoor
 	std::string GetDoorStatus(char message[]);
 	bool SetDoorStatus(char message[]);
-
-	//iValve
-	std::string GetValveStatus(char message[]);
 	bool SetValveStatus(char message[]);
+	std::string GetValveStatus(char message[]);
 
-	//iLock
-	std::string GetLockStatus(char message[]);
-	bool SetLockStatus(char message[]);
-
-private:
+protected:
 	HardwareConnection& hardwareConnection;
+	iValve& valve;
 };
 
 #endif
