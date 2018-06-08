@@ -1,19 +1,20 @@
 #ifndef TRAFFICLIGHT_H
 #define TRAFFICLIGHT_H
 
+#include "HardwareConnection.h"
 #include "interfaces/iTrafficLight.h"
 
-class TrafficLight
+class TrafficLight : public iTrafficLight
 
 {
 
 public:
-	TrafficLight(iTrafficLight& trafficLight);
-	std::string GetTrafficLightRedStatus(char message[]);
+	TrafficLight(HardwareConnection& HardwareConnection);
+	std::string GetTrafficLightStatus(char message[]);
 	bool SetTrafficLightStatus(char message[]);
 
 private:
-	iTrafficLight& trafficLight;
+	HardwareConnection& hardwareConnection;
 };
 
 #endif

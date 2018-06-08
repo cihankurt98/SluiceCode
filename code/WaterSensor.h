@@ -1,16 +1,17 @@
 #ifndef WATERSENSOR_H
 #define WATERSENSOR_H
 
+#include "HardwareConnection.h"
 #include "interfaces/iWaterSensor.h"
 
-class WaterSensor
+class WaterSensor : public iWaterSensor
 {
 public:
-	WaterSensor(iWaterSensor& waterSensor);
-	std::string GetWaterLevel();
+	WaterSensor(HardwareConnection& hardwareConnection);
+	std::string GetWaterLevel(char message[]);
 
 private:
-	iWaterSensor& waterSensor;
+	HardwareConnection& hardwareConnection;
 };
 
 #endif

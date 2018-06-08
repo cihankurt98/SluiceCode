@@ -2,6 +2,7 @@
 #include "Watersensor.h"
 #include "TrafficLight.h"
 #include "HardwareConnection.h"
+#include "Valve.h"
 #include "Sluice.h"
 
 
@@ -50,15 +51,13 @@ int main(int argc, char* argv[])
 	char ip[] = {"127.0.0.1"};
 	int port = atoi(std::string(argv[1]).c_str());
 
-	HardwareConnection cHandler(ip, port);
-	WaterSensor waterSensor(cHandler);
-	TrafficLight trafficLight(cHandler);
-	Door door(cHandler, cHandler);
-	Sluice* sluice = new Sluice(cHandler, cHandler, cHandler);
-	
 
-	//Sluice sluice = new Sluice (door);
-	//char messageToBeSent[13] = {"GetDoorLeft;"}; //test
+	HardwareConnection tcp(ip, port);
+	Door door(tcp);
+	WaterSensor waterSensor(tcp);
+	TrafficLight trafficLight(tcp);
+ 	Sluice sluiceOne(door, waterSensor, trafficLight);
+
 
 	bool quit = false;
 	char oldChoice = '\0';
@@ -82,7 +81,6 @@ int main(int argc, char* argv[])
 			4)Kwamen de boten van de laagwaterkant, dan worden de kleppen in de hoogwaterdeuren
 			opengezet zodat het water in de sluis stijgt tot het hoog
 			water niveau.*/
-			//std::cout << door->GetDoorStatus(messageToBeSent) << std::endl;
 			break;
 		case '2':
 			//std::cout << door.GetDoorStatus(messageToBeSent, 19) << std::endl;
@@ -106,3 +104,4 @@ int main(int argc, char* argv[])
 	}
 	return 0;
 }
+

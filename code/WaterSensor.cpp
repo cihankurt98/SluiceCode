@@ -1,14 +1,14 @@
 #include "WaterSensor.h"
 
 
-WaterSensor::WaterSensor(iWaterSensor& waterSensor)
-: waterSensor(waterSensor)
+WaterSensor::WaterSensor(HardwareConnection& hardwareConnection)
+: hardwareConnection(hardwareConnection)
 {
-	//helemaal niks
+
 }
 
-std::string WaterSensor::GetWaterLevel()
+std::string WaterSensor::GetWaterLevel(char message[])
 {
-	char message[] = {"GetWaterLevel;"};
-	return waterSensor.GetWaterLevel(message);
+	int size = strlen(message);
+	return hardwareConnection.Transmit(message, size, 0);
 }

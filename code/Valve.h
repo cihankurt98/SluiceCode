@@ -1,16 +1,19 @@
 #ifndef VALVE_H
 #define VALVE_H
 
+#include "HardwareConnection.h"
 #include "interfaces/iValve.h"
 
-class Valve
-
+class Valve : public iValve
 {
 public:
-	Valve(iValve& valve);
-	std::string GetDoorValveStatus(char message[]);
-	bool SetDoorValveStatus(char message[]);
+	Valve(HardwareConnection& hardwareConnection);
+	std::string GetValveStatus(char message[]);
+
+	bool SetValveStatus(char message[]);
+
 private:
-	iValve& valve;
+	HardwareConnection& hardwareConnection;
 };
+
 #endif

@@ -225,8 +225,22 @@ void SchutState::HandleElevateHighSubstates(ElevateWaterHighSubState& elevateSta
 void SchutState::CloseRightDoorEntryActions()
 {
   //ENTRY: rightdoor.close();
+  char message[] = {"SetDoorRight:close;"};
+  door.SetDoorStatus(message);
 
   //leftdoor trafficlights red
+  char tlMessage1[] = {"SetTrafficLight1Red:on;"};
+  char tlMessage2[] = {"SetTrafficLight1Green:off;"};
+
+  for (int i = 1; i < 3; i++)
+  {
+    tlMessage1[15] = i;
+    trafficLight.SetTrafficLightStatus(tlMessage1);
+    tlMessage2[15] = i;
+    trafficLight.SetTrafficLightStatus(tlMessage2);
+  }
+
+  
 }
 void SchutState::CloseRightDoorExitActions()
 {
@@ -235,6 +249,7 @@ void SchutState::CloseRightDoorExitActions()
 void SchutState::CloseLeftDoorEntryActions()
 {
   //ENTRY: leftdoor.close;
+  char message[] = {}
   //leftdoor trafficlights red
 }
 void SchutState::CloseLeftDoorExitActions()

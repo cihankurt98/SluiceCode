@@ -1,17 +1,22 @@
 #include "Valve.h"
-#include <iostream>
-Valve::Valve(iValve& valve)
-	: valve(valve)
+
+Valve::Valve(HardwareConnection& hardwareConnection)
+: hardwareConnection(hardwareConnection)
 {
-	std::cout << "kanker valve" << std::endl;
 }
 
-std::string Valve::GetDoorValveStatus(char message[])
+std::string Valve::GetValveStatus(char message[])
 {
-	return valve.GetValveStatus(message);
+	int size = strlen(message);
+	return hardwareConnection.Transmit(message, size, 0);
 }
 
-bool Valve::SetDoorValveStatus(char message[])
+bool Valve::SetValveStatus(char message[])
 {
-	return valve.SetValveStatus(message);
+	int size = strlen(message);
+	if ("ack" != hardwareConnection.Transmit(message, size, 0))
+	{
+		return false;
+	}
+	return true;
 }

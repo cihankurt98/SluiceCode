@@ -1,17 +1,23 @@
 #include "TrafficLight.h"
 
-TrafficLight::TrafficLight(iTrafficLight& trafficLight)
-:trafficLight(trafficLight)
+TrafficLight::TrafficLight(HardwareConnection& hardwareConnection)
+: hardwareConnection(hardwareConnection)
 {
-	//helemaal niks
 }
 
-std::string TrafficLight::GetTrafficLightRedStatus(char message[])
+std::string TrafficLight::GetTrafficLightStatus(char message[])
 {
-	return trafficLight.GetTrafficLightStatus(message);
+	int size = strlen(message);
+	return hardwareConnection.Transmit(message, size, 0);
 }
 
 bool TrafficLight::SetTrafficLightStatus(char message[])
 {
-	return trafficLight.SetTrafficLightStatus(message);
+	int size = strlen(message);
+	if ("ack" != hardwareConnection.Transmit(message, size, 0))
+	{
+
+		return false;
+	}
+	return true;
 }
