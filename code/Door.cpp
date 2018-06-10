@@ -1,5 +1,6 @@
 #include "Door.h"
 
+#include <iostream> //test kan weg
 Door::Door(HardwareConnection& hardwareConnection, iValve& valve)
 	: hardwareConnection(hardwareConnection),
 	  valve(valve)
@@ -24,6 +25,7 @@ bool Door::SetDoorStatus(char message[])
 
 bool Door::SetValveStatus(char message[])
 {
+	std::cout << message << std::endl;
 	return valve.SetValveStatus(message);
 }
 

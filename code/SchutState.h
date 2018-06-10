@@ -4,7 +4,7 @@
 #include "interfaces/iDoor.h"
 #include "interfaces/iWaterSensor.h"
 #include "interfaces/iTrafficLight.h"
-#include "Events.h"
+#include "Event.h"
 #include "State.h"
 
 enum SubState
@@ -29,15 +29,15 @@ class SchutState
 public:
 	SchutState(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight);
   void HandlePseudoState();
-  void HandleEvent(State& superState, ElevateWaterHighSubState& elevateState, Events ev);
+  void HandleEvent(State& superState, ElevateWaterHighSubState& elevateState, Event ev);
   void ExitSubStateActions();
 
-	SubState HandleCloseRightDoor(Events ev);
-	SubState HandleCloseLeftDoor(Events ev);
-	SubState HandleElevateWaterHigh(ElevateWaterHighSubState& elevateState,Events ev);
-	SubState HandleElevateWaterLow(Events ev);
-	SubState HandleOpenLeftDoor(State& superState,Events ev);
-  SubState HandleOpenRightDoor(State& superState,Events ev);
+	SubState HandleCloseRightDoor(Event ev);
+	SubState HandleCloseLeftDoor(Event ev);
+	SubState HandleElevateWaterHigh(ElevateWaterHighSubState& elevateState,Event ev);
+	SubState HandleElevateWaterLow(Event ev);
+	SubState HandleOpenLeftDoor(State& superState,Event ev);
+  SubState HandleOpenRightDoor(State& superState,Event ev);
 
 private:
 	SubState currentSubState;
@@ -45,7 +45,7 @@ private:
 	iDoor& door;
 	iWaterSensor& waterSensor;
 	iTrafficLight& trafficLight;
-	void HandleElevateHighSubstates(ElevateWaterHighSubState& elevateState,Events ev);
+	void HandleElevateHighSubstates(ElevateWaterHighSubState& elevateState,Event ev);
 
 	void CloseRightDoorEntryActions();
 	void CloseRightDoorExitActions();
@@ -66,7 +66,8 @@ private:
 	void OpenRightDoorEntryActions();
 	void OpenRightDoorExitActions();
 
-	void LeftDoorLightsRed();
+	void LightsLeftRed();
+	void LightsRightRed();
 
 };
 #endif

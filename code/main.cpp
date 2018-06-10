@@ -4,7 +4,7 @@
 #include "HardwareConnection.h"
 #include "Valve.h"
 #include "Sluice.h"
-
+#include "EventGenerator.h"
 
 #include <stdlib.h>
 #include <iostream>
@@ -57,12 +57,16 @@ int main(int argc, char* argv[])
 	Door door(tcp, valve);
 	WaterSensor waterSensor(tcp);
 	TrafficLight trafficLight(tcp);
- 	Sluice sluiceOne(door, waterSensor, trafficLight);
-
-
+	EventGenerator eventGen(door, waterSensor);
+ 	Sluice sluice(door, waterSensor, trafficLight, eventGen);
 	bool quit = false;
 	char oldChoice = '\0';
 
+	iUserInterface& UI = eventGen;
+
+	//char tmpmessage[] = {"SetDoorLeft:open;"};
+ 	//door.SetDoorStatus(tmpmessage);
+	
 	while (!quit)
 	{
 		ShowMenu();
@@ -72,29 +76,22 @@ int main(int argc, char* argv[])
 		switch (choice)
 		{
 		case '1':
-			/*
-			1)De sluiswachter beslist of de sluis geschut wordt, hij heeft hiervoor per sluis een knop “start”.
-			2)De geopende deuren van sluis, daar waar de waterstand aan beide zijden gelijk is, worden dan
-			gesloten.
-			3)Kwamen de boten van de hoogwaterkant, dan worden kleppen in de laagwaterdeuren open gez
-			et zodat het water in de sluis zakt tot het laagwaterniveau. Vervolgens worden de deuren aan
-			laagwaterzijde geopend.
-			4)Kwamen de boten van de laagwaterkant, dan worden de kleppen in de hoogwaterdeuren
-			opengezet zodat het water in de sluis stijgt tot het hoog
-			water niveau.*/
+			UI.BtnStartPressed();
 			break;
 		case '2':
-			//std::cout << door.GetDoorStatus(messageToBeSent, 19) << std::endl;
+			UI.BtnUitvarenPressed();
 			break;
 		case '3':
-			//std::cout << door.GetDoorStatus(messageToBeSent, 19) << std::endl;
+           UI.BtnInvarenPressed();
 			break;
 		case '4':
-			//std::cout << door.GetDoorStatus(messageToBeSent, 19) << std::endl;
+            //ev = EV_EMERGENCY;
+             UI.BtnAlarmPressed();
 			break;
 		case '5':
-			//std::cout << door.GetDoorStatus(messageToBeSent, 19) << std::endl;
-			break;
+            //ev = EV_RESUME;
+			UI.BtnResetPressed();
+            break;
 		case 'q':
 			quit = true;
 			break;
@@ -102,6 +99,12 @@ int main(int argc, char* argv[])
 			std::cerr << "Choice not recognized( " << choice  << ")" << std::endl;
 			break;
 		}
+		while (sluice.Run())
+        {
+            // do nothing
+            // this is needed for simulation only: because the eventGenerator only runs
+            // after each menu item selection, it doesn't always get all events
+        }
 	}
 	return 0;
 }

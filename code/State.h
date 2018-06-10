@@ -2,9 +2,9 @@
 #define STATE_H
 
 enum State {
-	Idle, 
-	Schutten, 
-	Emergency
+	Idle, //0
+	Schutten, //1 
+	Emergency //2
 };
 
 #endif

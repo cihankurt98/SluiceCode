@@ -1,34 +1,33 @@
 #ifndef SLUICE_H
 #define SLUICE_H
 
-
-
-#include "State.h"
-#include "Events.h"
-#include "interfaces/iDoor.h"
-#include "interfaces/iWaterSensor.h"
-#include "interfaces/iTrafficLight.h"
 #include "SchutState.h"
-
+#include "interfaces/iEventGenerator.h"
 
 class Sluice {
 
 
 public:
-	Sluice(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight);
+	Sluice(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight,
+		iEventGenerator& eventGen);
 	~Sluice();
 
+	bool Run();
+
+
 private:
-	State CurrentMainState;
-	void HandleEvent(Events ev);
-	State HandleStateIdle(Events ev);
-	State HandleStateSchutten(Events ev);
-	State HandleStateEmergency(Events ev);
+	State currentMainState;
 	iDoor& door;
 	iWaterSensor& waterSensor;
 	iTrafficLight& trafficLight;
+	iEventGenerator& eventGen;
 	SchutState* schutState;
 
+
+	void HandleEvent(Event ev);
+	State HandleStateIdle(Event ev);
+	State HandleStateSchutten(Event ev);
+	State HandleStateEmergency(Event ev);
 	void IdleEntryActions();
 	void IdleExitActions();
 	void SchuttenEntryActions();

@@ -36,7 +36,6 @@ std::string HardwareConnection::Transmit(char message[], int size,  int flags)
 		std::cout << "fail message" << std::endl;
 		return NULL;
 	}
-	std::cout << "sent message" << std::endl;
 	const int bufferSize = 20;
 	char receivedMessage[bufferSize];
 

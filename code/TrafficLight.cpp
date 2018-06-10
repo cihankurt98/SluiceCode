@@ -1,4 +1,5 @@
 #include "TrafficLight.h"
+#include <iostream>
 
 TrafficLight::TrafficLight(HardwareConnection& hardwareConnection)
 : hardwareConnection(hardwareConnection)
@@ -14,10 +15,10 @@ std::string TrafficLight::GetTrafficLightStatus(char message[])
 bool TrafficLight::SetTrafficLightStatus(char message[])
 {
 	int size = strlen(message);
-	if ("ack" != hardwareConnection.Transmit(message, size, 0))
+	if ("ack;" != hardwareConnection.Transmit(message, size, 0))
 	{
-
 		return false;
 	}
+
 	return true;
 }

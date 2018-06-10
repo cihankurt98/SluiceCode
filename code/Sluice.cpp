@@ -1,11 +1,15 @@
 #include "Sluice.h"
+
 #include <iostream>
 #include <cstddef>
 
-Sluice::Sluice(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight)
-	: door(door)
+
+Sluice::Sluice(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight, iEventGenerator& eventGen)
+	: currentMainState(Idle)
+    , door(door)
 	, waterSensor(waterSensor)
 	, trafficLight(trafficLight)
+	, eventGen(eventGen)
 	, schutState(new SchutState(door, waterSensor, trafficLight))
 {
 	IdleEntryActions();
@@ -15,32 +19,88 @@ Sluice::~Sluice()
 {
 
 }
-void Sluice::HandleEvent(Events ev) {
-	switch (CurrentMainState) {
+
+
+bool Sluice::Run()
+{
+	Event ev;
+	ev = eventGen.GetEvent();
+	std::cout << "Run sluice.cpp ev: " << ev << std::endl;
+	HandleEvent(ev);
+	return ev != NoEventOccured;
+}
+
+void Sluice::HandleEvent(Event ev) {
+	switch (currentMainState) {
 		case Idle:
-			CurrentMainState = HandleStateIdle(ev);
+			currentMainState = HandleStateIdle(ev);
 			break;
 		case Schutten:
-			CurrentMainState = HandleStateSchutten(ev);
+			currentMainState = HandleStateSchutten(ev);
 		case Emergency:
-			CurrentMainState = HandleStateEmergency(ev);
+		std::cout << "Current mainstate is emergency " << std::endl;
+			currentMainState = HandleStateEmergency(ev);
 
 		default:
-			std::cerr << "ERROR: illegal/unhandled running state with number: " << CurrentMainState;
+			std::cerr << "Sluice handle event error mainstate: " << currentMainState << std::endl;
 			break;
 
 
 	};
 }
 
-	State Sluice::HandleStateIdle(Events ev) {
+	State Sluice::HandleStateIdle(Event ev)
+	{
 		State nextState = Idle;
+		char msgDoorLeft[] = {"GetDoorLeft;"};
+		char msgDoorRight[]= {"GetDoorRight;"};
+		char msgTrafficLightGreen[] = {"SetTrafficLight1Green:on;"};
+		char msgTrafficLightRed[] = {"SetTrafficLight1Red:off;"};
+		std::string doorOpen = "doorOpen;";
 
 		switch (ev) {
 			case EV_SCHUTSTART:
 				IdleExitActions();
+				std::cout << "EV SCHUTSTART" << std::endl;
 				nextState = Schutten;
 				SchuttenEntryActions();
+            case EV_BTNINVARENPRESSED:
+				//CHECK WHICH DOOR IS OPEN
+				//SET LIGHT 1 OR 4 ON GREEN
+            	if(door.GetDoorStatus(msgDoorLeft) == doorOpen)
+				{
+					trafficLight.SetTrafficLightStatus(msgTrafficLightRed);
+					trafficLight.SetTrafficLightStatus(msgTrafficLightGreen);
+				}
+				//else if not allowed. Compiler message: msgDoorRight not used.
+				if (door.GetDoorStatus(msgDoorRight) == doorOpen)
+				{
+					msgTrafficLightGreen[15] = '4';
+					msgTrafficLightRed[15] = '4';
+					trafficLight.SetTrafficLightStatus(msgTrafficLightRed);
+					trafficLight.SetTrafficLightStatus(msgTrafficLightGreen);
+				}
+                break;
+            case EV_BTNUITVARENPRESSED:
+                //CHECK WHICH DOOR IS OPEN
+                //SET LIGHT 2 OR 3 OR GREEN
+				if(door.GetDoorStatus(msgDoorLeft) == doorOpen)
+				{
+					msgTrafficLightGreen[15] = '2';
+					msgTrafficLightRed[15] = '2';
+					trafficLight.SetTrafficLightStatus(msgTrafficLightRed);
+					trafficLight.SetTrafficLightStatus(msgTrafficLightGreen);
+				}
+				//else if not allowed. Compiler message: msgDoorRight not used.
+				if (door.GetDoorStatus(msgDoorRight) == doorOpen)
+				{
+					msgTrafficLightGreen[15] = '3';
+					msgTrafficLightRed[15] = '3';
+					trafficLight.SetTrafficLightStatus(msgTrafficLightRed);
+					trafficLight.SetTrafficLightStatus(msgTrafficLightGreen);
+				}
+                break;
+
 			default:
 				//ignored event, nothing to do here.
 				// Don't do anything when another event is called.
@@ -49,7 +109,7 @@ void Sluice::HandleEvent(Events ev) {
 		return nextState;
 	}
 
-	State Sluice::HandleStateEmergency(Events ev) {
+	State Sluice::HandleStateEmergency(Event ev) {
 		State nextState = Emergency;
 
 		switch (ev) {
@@ -63,7 +123,7 @@ void Sluice::HandleEvent(Events ev) {
 		return nextState;
 	}
 
-	State Sluice::HandleStateSchutten(Events ev) {
+	State Sluice::HandleStateSchutten(Event ev) {
 		State nextState = Schutten;
 		ElevateWaterHighSubState elevateState;
 
@@ -106,16 +166,21 @@ void Sluice::HandleEvent(Events ev) {
 
 //PRIVATE METHODS BELOW
 
-	void Sluice::IdleEntryActions() {
+	void Sluice::IdleEntryActions()
+	{
 		//do nothing. This exists for possible expansions to the system.
+		std::cout << "Idle entry actions doet niks" << std::endl;
 	}
-	void Sluice::IdleExitActions() {
+	void Sluice::IdleExitActions()
+	{
 
 
 	}
 
-	void Sluice::SchuttenEntryActions() {
-		//do nothing. This exists for possible expansions to the system.
+	void Sluice::SchuttenEntryActions()
+	{
+		std::cout << "Ik zit in schuttenentryactions" << std::endl;
+		schutState->HandlePseudoState();
 	}
 	void Sluice::SchuttenExitActions() {
 		//do nothing. This exists for possible expansions to the system.

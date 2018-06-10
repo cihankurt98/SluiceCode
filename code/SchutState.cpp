@@ -1,5 +1,7 @@
 #include "SchutState.h"
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 
 SchutState::SchutState(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& trafficLight)
   : door(door)
@@ -11,19 +13,48 @@ SchutState::SchutState(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& tr
 
 void SchutState::HandlePseudoState()
 {
+  std::cout << "Ik zit in schutstate handlepseudostate" << std::endl;
   // TODO - implement SchutState::HandlePseudoState
-
-
-
+  LightsRightRed();
+  std::string doorOpen = "doorOpen;";
+  std::string doorClosed = "doorClosed;";
 
 
   //DIT KLOPT NOT NIET. DIT MOET DE CHOICE BLOCK AAN HET BEGIN VOORSTELLEN
   // check doorstatus and act accordingly to state machine
-  currentSubState = CloseRightDoor;
-  CloseRightDoorEntryActions();
+  //Zet ook alle trafficlights op rood
+  char getDoorRight[] = {"GetDoorRight;"};
+  char getDoorLeft[] = {"GetDoorLeft;"};
+  char getWaterLevel[] = {"GetWaterLevel;"};
+  char low[] = {"low;"};
+  char high[] = {"high;"};
+  std::cout << "Doorleft: " << door.GetDoorStatus(getDoorLeft) << std::endl;
+  if (door.GetDoorStatus(getDoorRight) == doorOpen)
+  {
+    currentSubState = CloseRightDoor;
+    CloseRightDoorEntryActions();
+  }
+  else if (door.GetDoorStatus(getDoorLeft) == doorOpen)
+  {
+    currentSubState = CloseLeftDoor;
+    CloseLeftDoorEntryActions();
+  }
+
+  else if (door.GetDoorStatus(getDoorRight) == doorClosed && door.GetDoorStatus(getDoorLeft) == doorClosed && waterSensor.GetWaterLevel(getWaterLevel) == low )
+  {
+    currentSubState = ElevateWaterHigh;
+    ElevateWaterHighEntryActions();
+  }
+  else if (door.GetDoorStatus(getDoorRight) == doorClosed && door.GetDoorStatus(getDoorLeft) == doorClosed && waterSensor.GetWaterLevel(getWaterLevel) == high )
+  {
+    currentSubState = ElevateWaterLow;
+    ElevateWaterLowEntryActions();
+  }
+
+
 }
 
-void SchutState::HandleEvent(State& superState, ElevateWaterHighSubState& elevateState, Events ev)
+void SchutState::HandleEvent(State& superState, ElevateWaterHighSubState& elevateState, Event ev)
 {
   switch (currentSubState) {
   case CloseRightDoor:
@@ -32,8 +63,11 @@ void SchutState::HandleEvent(State& superState, ElevateWaterHighSubState& elevat
   case CloseLeftDoor:
     currentSubState = HandleCloseLeftDoor(ev);
   case ElevateWaterHigh:
+  std::cout << "handleevent elevatewaterhigh met event: " << ev << std::endl;
     currentSubState = HandleElevateWaterHigh(elevateState, ev);
   case ElevateWaterLow:
+
+   std::cout << "handleevent elevatewaterlow met event" << ev << std::endl;
     currentSubState = HandleElevateWaterLow(ev);
   case OpenLeftDoor:
     currentSubState = HandleOpenLeftDoor(superState, ev);
@@ -41,7 +75,7 @@ void SchutState::HandleEvent(State& superState, ElevateWaterHighSubState& elevat
     currentSubState = HandleOpenRightDoor(superState, ev);
 
   default:
-    std::cerr << "ERROR: illegal/unhandled running substate with number: " << currentSubState;
+    std::cerr << "Schutstate handle event error mainstate:  " << currentSubState << std::endl;
     break;
 
 
@@ -77,7 +111,7 @@ void SchutState::ExitSubStateActions()
     break;
   }
 }
-SubState SchutState::HandleCloseRightDoor(Events ev)
+SubState SchutState::HandleCloseRightDoor(Event ev)
 {
   SubState nextSubState = CloseRightDoor;
   switch (ev)
@@ -97,12 +131,14 @@ SubState SchutState::HandleCloseRightDoor(Events ev)
   return nextSubState;
 
 }
-SubState SchutState::HandleCloseLeftDoor(Events ev)
+SubState SchutState::HandleCloseLeftDoor(Event ev)
 {
+  std::cout << "event is : " << ev << std::endl;
   SubState nextSubState = CloseLeftDoor;
   switch (ev)
   {
   case EV_LEFTDOORCLOSED:
+    std::cout << "leftdoor closes event case in handle closeleftdoor" << std::endl;
     CloseLeftDoorExitActions();
 
     //check waterlevel to determine te elevation direction
@@ -112,19 +148,19 @@ SubState SchutState::HandleCloseLeftDoor(Events ev)
   default:
     break;
   }
-
-
   return nextSubState;
 }
 
-SubState SchutState::HandleElevateWaterHigh(ElevateWaterHighSubState& elevateState, Events ev)
+SubState SchutState::HandleElevateWaterHigh(ElevateWaterHighSubState& elevateState, Event ev)
 {
   SubState nextSubState = ElevateWaterHigh;
+  std::cout << "HandleElevateWaterHigh schutstate " << std::endl;
   HandleElevateHighSubstates(elevateState, ev);
   OpenValve3ExitActions();
   switch (ev)
   {
   case EV_WATER_HIGH:
+  std::cout << "handlelevatewaterhigh schutstate " << std::endl;
     ElevateWaterHighExitActions();
 
 
@@ -140,7 +176,7 @@ SubState SchutState::HandleElevateWaterHigh(ElevateWaterHighSubState& elevateSta
 
   return nextSubState;
 }
-SubState SchutState::HandleElevateWaterLow(Events ev)
+SubState SchutState::HandleElevateWaterLow(Event ev)
 {
   SubState nextSubState = ElevateWaterLow;
   switch (ev)
@@ -160,7 +196,7 @@ SubState SchutState::HandleElevateWaterLow(Events ev)
   return nextSubState;
 }
 
-SubState SchutState::HandleOpenLeftDoor(State& superState, Events ev)
+SubState SchutState::HandleOpenLeftDoor(State& superState, Event ev)
 {
   SubState nextSubState = CloseRightDoor;
   switch (ev)
@@ -178,7 +214,7 @@ SubState SchutState::HandleOpenLeftDoor(State& superState, Events ev)
 
   return nextSubState;
 }
-SubState SchutState::HandleOpenRightDoor(State& superState, Events ev)
+SubState SchutState::HandleOpenRightDoor(State& superState, Event ev)
 {
   SubState nextSubState = CloseRightDoor;
   switch (ev)
@@ -200,20 +236,21 @@ SubState SchutState::HandleOpenRightDoor(State& superState, Events ev)
 
 
 //PRIVATE methods
-void SchutState::HandleElevateHighSubstates(ElevateWaterHighSubState& elevateState, Events ev)
+void SchutState::HandleElevateHighSubstates(ElevateWaterHighSubState& elevateState, Event ev)
 {
   elevateState = OpenValve1;
+  std::cout <<"elevatestate = openvalve 1 met event: " << ev << std::endl;
   switch (ev)
   {
   case EV_WATERLEVEL_ABOVE_VALVE2:
     OpenValve1ExitActions();
-
+    std::cout <<"handleelevatehighsubbstates EV above valve 2" << std::endl;
     elevateState = OpenValve2;
     OpenValve2EntryActions();
     break;
   case EV_WATERLEVEL_ABOVE_VALVE3:
     OpenValve2ExitActions();
-
+    std::cout <<"handleelevatehighsubbstates EV above valve 3" << std::endl;
     elevateState = OpenValve3;
     OpenValve3EntryActions();
   default:
@@ -229,7 +266,7 @@ void SchutState::CloseRightDoorEntryActions()
   door.SetDoorStatus(message);
 
   //leftdoor trafficlights red
-  LeftDoorLightsRed();
+    LightsLeftRed();
 }
 
 void SchutState::CloseRightDoorExitActions()
@@ -241,9 +278,9 @@ void SchutState::CloseLeftDoorEntryActions()
   //ENTRY: leftdoor.close;
   char message[] = {"SetDoorLeft:close;"};
   door.SetDoorStatus(message);
-  
+
   //leftdoor trafficlights red
-  LeftDoorLightsRed();
+  LightsLeftRed();
 }
 void SchutState::CloseLeftDoorExitActions()
 {
@@ -252,7 +289,7 @@ void SchutState::CloseLeftDoorExitActions()
 void SchutState::ElevateWaterHighEntryActions()
 {
   //ENTRY: lowest valve open
-  char message[] = {"SetDoorLeftValve1:open;"}; // welke deur?
+  char message[] = {"SetDoorRightValve1:open;"};
   door.SetValveStatus(message);
 
 }
@@ -267,6 +304,8 @@ void SchutState::OpenValve1ExitActions()
 void SchutState::OpenValve2EntryActions()
 {
   //open middle valve
+  char message[] = {"SetDoorRightValve2:open;"};
+  door.SetValveStatus(message);
 }
 void SchutState::OpenValve2ExitActions()
 {
@@ -275,6 +314,8 @@ void SchutState::OpenValve2ExitActions()
 void SchutState::OpenValve3EntryActions()
 {
   //open highest valve
+  char message[] = {"SetDoorRightValve3:open;"};
+  door.SetValveStatus(message);
 }
 void SchutState::OpenValve3ExitActions()
 {
@@ -282,42 +323,89 @@ void SchutState::OpenValve3ExitActions()
 }
 void SchutState::ElevateWaterHighExitActions()
 {
-  //EXIT: close all valves
+  char message[] = {"SetDoorRightValve0:close;"};
+
+  for (int i = 1; i < 4; i++)
+  {
+    char c = i;
+    message[17] = c;
+    door.SetValveStatus(message);
+  }
 }
 void SchutState::ElevateWaterLowEntryActions()
 {
   //ENTRY: open lowest valve
+  char message[] = {"SetDoorRightValve1:open;"};
+  door.SetValveStatus(message);
 }
 void SchutState::ElevateWaterLowExitActions()
 {
   //EXIT: close lowest valve
+  char message[] = {"SetDoorRightValve1:close;"};
+  door.SetValveStatus(message);
 }
 void SchutState::OpenLeftDoorEntryActions()
 {
   //Leftdoor.open
+  char message[] = {"SetDoorLeft:open;"};
+  door.SetDoorStatus(message);
 }
 void SchutState::OpenLeftDoorExitActions()
 {
   //leftdoor trafficlights green
+  char tlMessageRed[] = {"SetTrafficLight1Red:off;"};
+  char tlMessageGreen[] = {"SetTrafficLight1Green:on;"};
+  char tlMessageRed2[] = {"SetTrafficLight2Red:off;"};
+  char tlMessageGreen2[] = {"SetTrafficLight2Green:on;"};
+
+
+  trafficLight.SetTrafficLightStatus(tlMessageRed);
+  trafficLight.SetTrafficLightStatus(tlMessageRed2);
+  trafficLight.SetTrafficLightStatus(tlMessageGreen);
+  trafficLight.SetTrafficLightStatus(tlMessageGreen2);
 }
 void SchutState::OpenRightDoorEntryActions()
 {
   //Rightdoor.open
+  char message[] = {"SetDoorLeft:open;"};
+  door.SetDoorStatus(message);
 }
 void SchutState::OpenRightDoorExitActions()
 {
   //rightdoor trafficlights green
+  char tlMessageRed[] = {"SetTrafficLight3Red:off;"};
+  char tlMessageRed2[] = {"SetTrafficLight4Red:off;"};
+  char tlMessageGreen[] = {"SetTrafficLight3Green:on;"};
+  char tlMessageGreen2[] = {"SetTrafficLight4Green:on;"};
+
+  trafficLight.SetTrafficLightStatus(tlMessageRed);
+  trafficLight.SetTrafficLightStatus(tlMessageRed2);
+  trafficLight.SetTrafficLightStatus(tlMessageGreen);
+  trafficLight.SetTrafficLightStatus(tlMessageGreen2);
+
 }
-void SchutState::LeftDoorLightsRed()
+void SchutState::LightsLeftRed()
 {
   char tlMessageRed[] = {"SetTrafficLight1Red:on;"};
+  char tlMessageRed2[] = {"SetTrafficLight2Red:on;"};
   char tlMessageGreen[] = {"SetTrafficLight1Green:off;"};
+  char tlMessageGreen2[] = {"SetTrafficLight2Green:off;"};
 
-  for (int i = 1; i < 3; i++)
-  {
-    tlMessageRed[15] = i;
-    trafficLight.SetTrafficLightStatus(tlMessageRed);
-    tlMessageGreen[15] = i;
-    trafficLight.SetTrafficLightStatus(tlMessageGreen);
-  }
+  trafficLight.SetTrafficLightStatus(tlMessageRed);
+  trafficLight.SetTrafficLightStatus(tlMessageRed2);
+  trafficLight.SetTrafficLightStatus(tlMessageGreen);
+  trafficLight.SetTrafficLightStatus(tlMessageGreen2);
+}
+
+void SchutState::LightsRightRed()
+{
+  char tlMessageRed[] = {"SetTrafficLight3Red:on;"};
+  char tlMessageRed2[] = {"SetTrafficLight4Red:on;"};
+  char tlMessageGreen[] = {"SetTrafficLight3Green:off;"};
+  char tlMessageGreen2[] = {"SetTrafficLight4Green:off;"};
+
+  trafficLight.SetTrafficLightStatus(tlMessageRed);
+  trafficLight.SetTrafficLightStatus(tlMessageRed2);
+  trafficLight.SetTrafficLightStatus(tlMessageGreen);
+  trafficLight.SetTrafficLightStatus(tlMessageGreen2);
 }
