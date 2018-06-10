@@ -12,8 +12,12 @@ public:
 	Door(HardwareConnection& hardwareConnection, iValve& valve);
 
 	//iDoor
-	std::string GetDoorStatus(char message[]);
-	bool SetDoorStatus(char message[]);
+	std::string GetDoorStatusLeft();
+	std::string GetDoorStatusRight();
+	bool SetDoorStatusLeftOpen();
+	bool SetDoorStatusLeftClose();
+	bool SetDoorStatusRightOpen();
+	bool SetDoorStatusRightClose();
 	bool SetValveStatus(char message[]);
 	std::string GetValveStatus(char message[]);
 

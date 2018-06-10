@@ -11,8 +11,12 @@ class iDoor
 public:
 	virtual ~iDoor(){};
 
-	virtual std::string GetDoorStatus(char message[]) = 0;
-	virtual bool SetDoorStatus(char message[]) = 0;
+	virtual std::string GetDoorStatusLeft() = 0;
+	virtual std::string GetDoorStatusRight() = 0;
+	virtual bool SetDoorStatusLeftOpen() = 0;
+	virtual bool SetDoorStatusLeftClose() = 0;
+	virtual bool SetDoorStatusRightOpen() = 0;
+	virtual bool SetDoorStatusRightClose() = 0;
 	virtual bool SetValveStatus(char message[]) = 0;
 	virtual std::string GetValveStatus(char message[]) = 0;
 };

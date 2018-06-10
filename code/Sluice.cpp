@@ -56,8 +56,6 @@ void Sluice::HandleEvent(Event ev)
 	State Sluice::HandleStateIdle(Event ev)
 	{
 		State nextState = Idle;
-		char msgDoorLeft[] = {"GetDoorLeft;"};
-		char msgDoorRight[]= {"GetDoorRight;"};
 		char msgTrafficLightGreen[] = {"SetTrafficLight1Green:on;"};
 		char msgTrafficLightRed[] = {"SetTrafficLight1Red:off;"};
 		std::string doorOpen = "doorOpen;";
@@ -71,13 +69,13 @@ void Sluice::HandleEvent(Event ev)
 				//CHECK WHICH DOOR IS OPEN
 				//SET LIGHT 1 OR 4 ON GREEN
             SetAllLightsRed();
-            	if(door.GetDoorStatus(msgDoorLeft) == doorOpen)
+            	if(door.GetDoorStatusLeft() == doorOpen)
 				{
 					trafficLight.SetTrafficLightStatus(msgTrafficLightRed);
 					trafficLight.SetTrafficLightStatus(msgTrafficLightGreen);
 				}
 				//else if not allowed. Compiler message: msgDoorRight not used.
-				if (door.GetDoorStatus(msgDoorRight) == doorOpen)
+				if (door.GetDoorStatusRight() == doorOpen)
 				{
 					msgTrafficLightGreen[15] = '4';
 					msgTrafficLightRed[15] = '4';
@@ -89,7 +87,7 @@ void Sluice::HandleEvent(Event ev)
                 //CHECK WHICH DOOR IS OPEN
                 //SET LIGHT 2 OR 3 OR GREEN
             SetAllLightsRed();
-				if(door.GetDoorStatus(msgDoorLeft) == doorOpen)
+				if(door.GetDoorStatusLeft() == doorOpen)
 				{
 					msgTrafficLightGreen[15] = '2';
 					msgTrafficLightRed[15] = '2';
@@ -97,7 +95,7 @@ void Sluice::HandleEvent(Event ev)
 					trafficLight.SetTrafficLightStatus(msgTrafficLightGreen);
 				}
 				//else if not allowed. Compiler message: msgDoorRight not used.
-				if (door.GetDoorStatus(msgDoorRight) == doorOpen)
+				if (door.GetDoorStatusRight() == doorOpen)
 				{
 					msgTrafficLightGreen[15] = '3';
 					msgTrafficLightRed[15] = '3';
@@ -218,11 +216,9 @@ void Sluice::HandleEvent(Event ev)
 
 	void Sluice::HaltAllDoors()
 	{
-		char msgDoorLeftClose[] = {"SetDoorLeft:stop;"};
-		char msgDoorRightClose[] = {"SetDoorRight:stop;"};
 
-		door.SetDoorStatus(msgDoorLeftClose);
-		door.SetDoorStatus(msgDoorRightClose);
+		door.SetDoorStatusLeftClose();
+		door.SetDoorStatusRightClose();
 
 		char msgDoorLeftCloseValve1[] = {"SetDoorLeftValve1:close;"};
 		door.SetValveStatus(msgDoorLeftCloseValve1);

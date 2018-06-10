@@ -22,29 +22,26 @@ void SchutState::HandlePseudoState()
   //DIT KLOPT NOT NIET. DIT MOET DE CHOICE BLOCK AAN HET BEGIN VOORSTELLEN
   // check doorstatus and act accordingly to state machine
   //Zet ook alle trafficlights op rood
-  char getDoorRight[] = {"GetDoorRight;"};
-  char getDoorLeft[] = {"GetDoorLeft;"};
   char getWaterLevel[] = {"GetWaterLevel;"};
   char low[] = {"low;"};
   char high[] = {"high;"};
-  if (door.GetDoorStatus(getDoorRight) == doorOpen)
+  if (door.GetDoorStatusRight() == doorOpen)
   {
     currentSubState = CloseRightDoor;
     CloseRightDoorEntryActions();
   }
-  else if (door.GetDoorStatus(getDoorLeft) == doorOpen)
+  else if (door.GetDoorStatusLeft() == doorOpen)
   {
-    std::cout << "doorleft = open" << std::endl;
     currentSubState = CloseLeftDoor;
     CloseLeftDoorEntryActions();
   }
 
-  else if (door.GetDoorStatus(getDoorRight) == doorClosed && door.GetDoorStatus(getDoorLeft) == doorClosed && waterSensor.GetWaterLevel(getWaterLevel) == low )
+  else if (door.GetDoorStatusRight() == doorClosed && door.GetDoorStatusLeft() == doorClosed && waterSensor.GetWaterLevel(getWaterLevel) == low )
   {
     currentSubState = ElevateWaterHigh;
     ElevateWaterHighEntryActions();
   }
-  else if (door.GetDoorStatus(getDoorRight) == doorClosed && door.GetDoorStatus(getDoorLeft) == doorClosed && waterSensor.GetWaterLevel(getWaterLevel) == high )
+  else if (door.GetDoorStatusRight() == doorClosed && door.GetDoorStatusLeft() == doorClosed && waterSensor.GetWaterLevel(getWaterLevel) == high )
   {
     currentSubState = ElevateWaterLow;
     ElevateWaterLowEntryActions();
@@ -134,7 +131,6 @@ SubState SchutState::HandleCloseLeftDoor(Event ev)
   switch (ev)
   {
   case EV_LEFTDOORCLOSED:
-  std::cout << "EV_LEFTDOORCLOSED" << std::endl;
     CloseLeftDoorExitActions();
 
     //check waterlevel to determine te elevation direction
@@ -244,9 +240,7 @@ void SchutState::HandleElevateHighSubstates(ElevateWaterHighSubState& elevateSta
 void SchutState::CloseRightDoorEntryActions()
 {
   //ENTRY: rightdoor.close();
-  char message[] = {"SetDoorRight:close;"};
-  door.SetDoorStatus(message);
-
+  door.SetDoorStatusRightClose();
   //leftdoor trafficlights red
     LightsLeftRed();
 }
@@ -256,8 +250,7 @@ void SchutState::CloseRightDoorExitActions(){}
 void SchutState::CloseLeftDoorEntryActions()
 {
   //ENTRY: leftdoor.close;
-  char message[] = {"SetDoorLeft:close;"};
-  door.SetDoorStatus(message);
+  door.SetDoorStatusLeftClose();
 
   //leftdoor trafficlights red
   LightsLeftRed();
@@ -313,9 +306,9 @@ void SchutState::ElevateWaterLowExitActions()
 void SchutState::OpenLeftDoorEntryActions()
 {
   //Leftdoor.open
-  char message[] = {"SetDoorLeft:open;"};
-  door.SetDoorStatus(message);
+  door.SetDoorStatusLeftOpen();
 }
+
 void SchutState::OpenLeftDoorExitActions()
 {
   //leftdoor trafficlights green
@@ -333,8 +326,7 @@ void SchutState::OpenLeftDoorExitActions()
 void SchutState::OpenRightDoorEntryActions()
 {
   //Rightdoor.open
-  char message[] = {"SetDoorRight:open;"};
-  door.SetDoorStatus(message);
+  door.SetDoorStatusRightOpen();
 }
 void SchutState::OpenRightDoorExitActions()
 {

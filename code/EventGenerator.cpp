@@ -7,11 +7,9 @@ EventGenerator::EventGenerator(iDoor& door, iWaterSensor& waterSensor)
 waterSensor(waterSensor)
 {
 	char getWaterLevel[] = {"GetWaterLevel;"};
-	char getLeftDoorState[] = {"GetDoorLeft;"};
-	char getRightDoorState[] = {"GetDoorRight;"};
 	prevWaterLevel = waterSensor.GetWaterLevel(getWaterLevel);
-	prevRightDoorState = door.GetDoorStatus(getRightDoorState);
-	prevLeftDoorState = door.GetDoorStatus(getLeftDoorState);
+	prevRightDoorState = door.GetDoorStatusRight();
+	prevLeftDoorState = door.GetDoorStatusLeft();
 }
 
 
@@ -72,12 +70,10 @@ Event EventGenerator::TranslateToEvent(std::string eventString)
 void EventGenerator::HandlePollEvents()
 {
 	char getWaterLevel[] = {"GetWaterLevel;"};
-	char getLeftDoorState[] = {"GetDoorLeft;"};
-	char getRightDoorState[] = {"GetDoorRight;"};
 	
 	std::string currWaterLevel = waterSensor.GetWaterLevel(getWaterLevel);
-	std::string currRightDoorState = door.GetDoorStatus(getRightDoorState);
-	std::string currLeftDoorState = door.GetDoorStatus(getLeftDoorState);
+	std::string currRightDoorState = door.GetDoorStatusRight();
+	std::string currLeftDoorState = door.GetDoorStatusLeft();
 
 	if (currWaterLevel != prevWaterLevel)
 	{
