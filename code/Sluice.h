@@ -34,7 +34,8 @@ private:
 	void SchuttenExitActions();
 	void EmergencyEntryActions();
 	void EmergencyExitActions();
-
+	void SetAllLightsRed();
+	void HaltAllDoors();
 
 };
 

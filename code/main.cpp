@@ -64,9 +64,6 @@ int main(int argc, char* argv[])
 	char oldChoice = '\0';
 
 	iUserInterface& UI = eventGen;
-
-	//char tmpmessage[] = {"SetDoorLeft:open;"};
- 	//door.SetDoorStatus(tmpmessage);
 	std::thread poll (&Sluice::Run, sluice);
 	poll.detach();
 	while (!quit)
@@ -87,11 +84,9 @@ int main(int argc, char* argv[])
            UI.BtnInvarenPressed();
 			break;
 		case '4':
-            //ev = EV_EMERGENCY;
              UI.BtnAlarmPressed();
 			break;
 		case '5':
-            //ev = EV_RESUME;
 			UI.BtnResetPressed();
             break;
 		case 'q':

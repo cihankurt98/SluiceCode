@@ -68,6 +68,7 @@ void Sluice::HandleEvent(Event ev)
             case EV_BTNINVARENPRESSED:
 				//CHECK WHICH DOOR IS OPEN
 				//SET LIGHT 1 OR 4 ON GREEN
+            SetAllLightsRed();
             	if(door.GetDoorStatus(msgDoorLeft) == doorOpen)
 				{
 					trafficLight.SetTrafficLightStatus(msgTrafficLightRed);
@@ -85,6 +86,7 @@ void Sluice::HandleEvent(Event ev)
             case EV_BTNUITVARENPRESSED:
                 //CHECK WHICH DOOR IS OPEN
                 //SET LIGHT 2 OR 3 OR GREEN
+            SetAllLightsRed();
 				if(door.GetDoorStatus(msgDoorLeft) == doorOpen)
 				{
 					msgTrafficLightGreen[15] = '2';
@@ -116,6 +118,7 @@ void Sluice::HandleEvent(Event ev)
 
 		switch (ev) {
 			case EV_RESUME:
+
 				break; //was return 0;
 
 			default:
@@ -125,11 +128,13 @@ void Sluice::HandleEvent(Event ev)
 		return nextState;
 	}
 
-	State Sluice::HandleStateSchutten(Event ev) {
+	State Sluice::HandleStateSchutten(Event ev)
+	{
 		State nextState = Schutten;
 		ElevateWaterHighSubState elevateState;
 
-		switch (ev) {
+		switch (ev)
+		{
 			//handle on Schutten level
 			case EV_RIGHTDOOROPENED:
 				SchuttenExitActions();
@@ -143,25 +148,19 @@ void Sluice::HandleEvent(Event ev)
 
 				nextState = Idle;
 				break;
+			case EV_EMERGENCY:
+			EmergencyEntryActions();
+			nextState = Emergency;
+			break;
 
 				//Schutten substates below
 			default:
-				schutState->HandleEvent(nextState,elevateState, ev);
-				if (nextState != Schutten) {
+ 				schutState->HandleEvent(nextState,elevateState, ev);
+				if (nextState != Schutten)
+				{
 					SchuttenExitActions();
-					switch (nextState) {
-						case EV_EMERGENCY:
-							nextState = Emergency;
-							EmergencyEntryActions();
-							break;
-						default:
-							std::cerr << "ERROR: unhandled state with number: " << nextState;
-							break;
-					}
 				}
-
 				break;
-
 		}
 		return nextState;
 	}
@@ -189,12 +188,57 @@ void Sluice::HandleEvent(Event ev)
 	void Sluice::EmergencyEntryActions() {
 		//TODO: SET ALL LIGHTS ON RED.
 		//HALT DOOR MOVEMENT
-		//CHECK DOOR STATUS
-		//CLOSE VALVES IF DOORS ARE CLOSED
-		//OTHERWISE DO NOTHING AND WAIT FOR RESUME EVENT
+		//CLOSE VALVES 
+	
+
+		SetAllLightsRed();
+		HaltAllDoors();
 
 	}
 	void Sluice::EmergencyExitActions() {
 		//do nothing. This exists for possible expansions to the system.
 	}
 
+	void Sluice::SetAllLightsRed()
+	{
+
+		char msgTL1GreenOff[] = {"SetTrafficLight1Green:off;"};
+		char msgTL2GreenOff[] = {"SetTrafficLight2Green:off;"};
+		char msgTL3GreenOff[] = {"SetTrafficLight3Green:off;"};
+		char msgTL4GreenOff[] = {"SetTrafficLight4Green:off;"};
+
+		trafficLight.SetTrafficLightStatus(msgTL1GreenOff);
+		trafficLight.SetTrafficLightStatus(msgTL2GreenOff);
+		trafficLight.SetTrafficLightStatus(msgTL3GreenOff);
+		trafficLight.SetTrafficLightStatus(msgTL4GreenOff);
+		
+		char msgTL1RedOn[] = {"SetTrafficLight1Red:on;"};
+		char msgTL2RedOn[] = {"SetTrafficLight2Red:on;"};
+		char msgTL3RedOn[] = {"SetTrafficLight3Red:on;"};
+		char msgTL4RedOn[] = {"SetTrafficLight4Red:on;"};
+
+		trafficLight.SetTrafficLightStatus(msgTL1RedOn);
+		trafficLight.SetTrafficLightStatus(msgTL2RedOn);
+		trafficLight.SetTrafficLightStatus(msgTL3RedOn);
+		trafficLight.SetTrafficLightStatus(msgTL4RedOn);
+	}
+
+	void Sluice::HaltAllDoors()
+	{
+		char msgDoorLeftClose[] = {"SetDoorLeft:stop;"};
+		char msgDoorRightClose[] = {"SetDoorRight:stop;"};
+
+		door.SetDoorStatus(msgDoorLeftClose);
+		door.SetDoorStatus(msgDoorRightClose);
+
+		char msgDoorLeftCloseValve1[] = {"SetDoorLeftValve1:close;"};
+		door.SetValveStatus(msgDoorLeftCloseValve1);
+		// valve 2 and 3 never open up on the left side.
+		char msgDoorRightCloseValve1[] = {"SetDoorRightValve1:close;"};
+		char msgDoorRightCloseValve2[] = {"SetDoorRightValve2:close;"};
+		char msgDoorRightCloseValve3[] = {"SetDoorRightValve3:close;"};
+		door.SetValveStatus(msgDoorRightCloseValve1);
+		door.SetValveStatus(msgDoorRightCloseValve2);
+		door.SetValveStatus(msgDoorRightCloseValve3);
+
+	}

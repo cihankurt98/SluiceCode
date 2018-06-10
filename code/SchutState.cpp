@@ -60,7 +60,6 @@ void SchutState::HandleEvent(State& superState, ElevateWaterHighSubState& elevat
     currentSubState = HandleCloseRightDoor(ev);
     break;
   case CloseLeftDoor:
-  std::cout << "handleevent schutstate closeleftdoor" << std::endl;
     currentSubState = HandleCloseLeftDoor(ev);
     break;
   case ElevateWaterHigh:
