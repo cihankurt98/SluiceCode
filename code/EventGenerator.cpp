@@ -31,20 +31,16 @@ Event EventGenerator::GetEvent()
 
 void EventGenerator::BtnStartPressed()
 {
-	std::cout << "btnstartpressed print" << std::endl;
 	events.push_back(EV_SCHUTSTART);
 }
 
 void EventGenerator::BtnUitvarenPressed()
 {
-	std::cout << "btnuitvarenpressed print" << std::endl;
 	events.push_back(EV_BTNUITVARENPRESSED);
 }
 
 void EventGenerator::BtnInvarenPressed()
 {
-		std::cout << "btninvarenpressed print" << std::endl;
-
 	events.push_back(EV_BTNINVARENPRESSED);
 }
 
@@ -100,7 +96,7 @@ void EventGenerator::HandlePollEvents()
 	if (currLeftDoorState != prevLeftDoorState)
 	{
 		std::stringstream ss;
-		ss << currRightDoorState << "left";
+		ss << currLeftDoorState << "left";
 		events.push_back(TranslateToEvent(ss.str()));
 		prevLeftDoorState = currLeftDoorState;
 	}

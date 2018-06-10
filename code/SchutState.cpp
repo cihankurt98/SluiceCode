@@ -34,6 +34,7 @@ void SchutState::HandlePseudoState()
   }
   else if (door.GetDoorStatus(getDoorLeft) == doorOpen)
   {
+    std::cout << "doorleft = open" << std::endl;
     currentSubState = CloseLeftDoor;
     CloseLeftDoorEntryActions();
   }
@@ -59,6 +60,7 @@ void SchutState::HandleEvent(State& superState, ElevateWaterHighSubState& elevat
     currentSubState = HandleCloseRightDoor(ev);
     break;
   case CloseLeftDoor:
+  std::cout << "handleevent schutstate closeleftdoor" << std::endl;
     currentSubState = HandleCloseLeftDoor(ev);
     break;
   case ElevateWaterHigh:
@@ -137,11 +139,12 @@ SubState SchutState::HandleCloseLeftDoor(Event ev)
   switch (ev)
   {
   case EV_LEFTDOORCLOSED:
+  std::cout << "EV_LEFTDOORCLOSED" << std::endl;
     CloseLeftDoorExitActions();
 
     //check waterlevel to determine te elevation direction
-    nextSubState = ElevateWaterLow;
-    ElevateWaterLowEntryActions();
+    nextSubState = ElevateWaterHigh;
+    ElevateWaterHighEntryActions();
     break;
   default:
     break;
@@ -177,7 +180,6 @@ SubState SchutState::HandleElevateWaterLow(Event ev)
   {
   case EV_WATER_LOW:
     ElevateWaterLowExitActions();
-
     //check waterlevel to determine te elevation direction
     nextSubState = OpenLeftDoor;
     OpenLeftDoorEntryActions();
@@ -192,12 +194,12 @@ SubState SchutState::HandleElevateWaterLow(Event ev)
 
 SubState SchutState::HandleOpenLeftDoor(State& superState, Event ev)
 {
-  SubState nextSubState = CloseRightDoor;
+  SubState nextSubState = OpenLeftDoor;
   switch (ev)
   {
   case EV_LEFTDOOROPENED:
-    OpenLeftDoorExitActions();
     superState = Idle;
+    OpenLeftDoorExitActions();
     break;
 
   default:
