@@ -37,10 +37,11 @@ void Sluice::HandleEvent(Event ev) {
 			break;
 		case Schutten:
 			currentMainState = HandleStateSchutten(ev);
+			break;
 		case Emergency:
 		std::cout << "Current mainstate is emergency " << std::endl;
 			currentMainState = HandleStateEmergency(ev);
-
+			break;
 		default:
 			std::cerr << "Sluice handle event error mainstate: " << currentMainState << std::endl;
 			break;
@@ -109,7 +110,8 @@ void Sluice::HandleEvent(Event ev) {
 		return nextState;
 	}
 
-	State Sluice::HandleStateEmergency(Event ev) {
+	State Sluice::HandleStateEmergency(Event ev)
+	{
 		State nextState = Emergency;
 
 		switch (ev) {
