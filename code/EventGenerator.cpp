@@ -67,7 +67,7 @@ Event EventGenerator::TranslateToEvent(std::string eventString)
 	if (eventString == "doorClosed;left") return EV_LEFTDOORCLOSED;
 	if (eventString == "doorClosed;right") return EV_RIGHTDOORCLOSED;
 	if (eventString == "doorOpen;left") return EV_LEFTDOOROPENED;
-	if (eventString == "doorOpen;right") return EV_RIGHTDOORCLOSED;
+	if (eventString == "doorOpen;right") return EV_RIGHTDOOROPENED;
 
 	return NoEventOccured;
 }
@@ -85,7 +85,6 @@ void EventGenerator::HandlePollEvents()
 
 	if (currWaterLevel != prevWaterLevel)
 	{
-		std::cout << "Waterlevel changed currwaterlevel = " << currWaterLevel << std::endl;
 		events.push_back((TranslateToEvent(currWaterLevel)));
 		prevWaterLevel = currWaterLevel;
 	}

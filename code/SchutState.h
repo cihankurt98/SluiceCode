@@ -37,7 +37,7 @@ public:
 	SubState HandleElevateWaterHigh(ElevateWaterHighSubState& elevateState,Event ev);
 	SubState HandleElevateWaterLow(Event ev);
 	SubState HandleOpenLeftDoor(State& superState,Event ev);
-  SubState HandleOpenRightDoor(State& superState,Event ev);
+  	SubState HandleOpenRightDoor(State& superState,Event ev);
 
 private:
 	SubState currentSubState;

@@ -25,7 +25,6 @@ bool Door::SetDoorStatus(char message[])
 
 bool Door::SetValveStatus(char message[])
 {
-	std::cout << message << std::endl;
 	return valve.SetValveStatus(message);
 }
 

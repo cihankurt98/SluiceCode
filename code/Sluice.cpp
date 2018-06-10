@@ -21,13 +21,14 @@ Sluice::~Sluice()
 }
 
 
-bool Sluice::Run()
+void Sluice::Run()
 {
 	Event ev;
+	while (true)
+	{
 	ev = eventGen.GetEvent();
-	std::cout << "Run sluice.cpp ev: " << ev << std::endl;
 	HandleEvent(ev);
-	return ev != NoEventOccured;
+	}
 }
 
 void Sluice::HandleEvent(Event ev)
@@ -37,10 +38,9 @@ void Sluice::HandleEvent(Event ev)
 		currentMainState = HandleStateIdle(ev);
 			break;
 		case Schutten:
-			currentMainState = HandleStateSchutten(ev);
+		currentMainState = HandleStateSchutten(ev);
 			break;
 		case Emergency:
-		std::cout << "Current mainstate is emergency " << std::endl;
 			currentMainState = HandleStateEmergency(ev);
 			break;
 		default:
@@ -59,13 +59,12 @@ void Sluice::HandleEvent(Event ev)
 		char msgTrafficLightGreen[] = {"SetTrafficLight1Green:on;"};
 		char msgTrafficLightRed[] = {"SetTrafficLight1Red:off;"};
 		std::string doorOpen = "doorOpen;";
-
 		switch (ev) {
 			case EV_SCHUTSTART:
 				IdleExitActions();
-				std::cout << "EV SCHUTSTART" << std::endl;
 				nextState = Schutten;
 				SchuttenEntryActions();
+				break;
             case EV_BTNINVARENPRESSED:
 				//CHECK WHICH DOOR IS OPEN
 				//SET LIGHT 1 OR 4 ON GREEN
@@ -167,12 +166,12 @@ void Sluice::HandleEvent(Event ev)
 		return nextState;
 	}
 
+
 //PRIVATE METHODS BELOW
 
 	void Sluice::IdleEntryActions()
 	{
 		//do nothing. This exists for possible expansions to the system.
-		std::cout << "Idle entry actions doet niks" << std::endl;
 	}
 	void Sluice::IdleExitActions()
 	{
@@ -182,7 +181,6 @@ void Sluice::HandleEvent(Event ev)
 
 	void Sluice::SchuttenEntryActions()
 	{
-		std::cout << "Ik zit in schuttenentryactions" << std::endl;
 		schutState->HandlePseudoState();
 	}
 	void Sluice::SchuttenExitActions() {

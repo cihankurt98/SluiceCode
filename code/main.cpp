@@ -101,12 +101,6 @@ int main(int argc, char* argv[])
 			std::cerr << "Choice not recognized( " << choice  << ")" << std::endl;
 			break;
 		}
-		while (sluice.Run())
-        {
-            // do nothing
-            // this is needed for simulation only: because the eventGenerator only runs
-            // after each menu item selection, it doesn't always get all events
-        }
 	}
 	return 0;
 }

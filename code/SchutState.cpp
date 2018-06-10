@@ -13,7 +13,6 @@ SchutState::SchutState(iDoor& door, iWaterSensor& waterSensor, iTrafficLight& tr
 
 void SchutState::HandlePseudoState()
 {
-  std::cout << "Ik zit in schutstate handlepseudostate" << std::endl;
   // TODO - implement SchutState::HandlePseudoState
   LightsRightRed();
   std::string doorOpen = "doorOpen;";
@@ -28,7 +27,6 @@ void SchutState::HandlePseudoState()
   char getWaterLevel[] = {"GetWaterLevel;"};
   char low[] = {"low;"};
   char high[] = {"high;"};
-  std::cout << "Doorleft: " << door.GetDoorStatus(getDoorLeft) << std::endl;
   if (door.GetDoorStatus(getDoorRight) == doorOpen)
   {
     currentSubState = CloseRightDoor;
@@ -42,7 +40,6 @@ void SchutState::HandlePseudoState()
 
   else if (door.GetDoorStatus(getDoorRight) == doorClosed && door.GetDoorStatus(getDoorLeft) == doorClosed && waterSensor.GetWaterLevel(getWaterLevel) == low )
   {
-    std::cout << "pseudo 3de if" << std::endl;
     currentSubState = ElevateWaterHigh;
     ElevateWaterHighEntryActions();
   }
@@ -65,11 +62,9 @@ void SchutState::HandleEvent(State& superState, ElevateWaterHighSubState& elevat
     currentSubState = HandleCloseLeftDoor(ev);
     break;
   case ElevateWaterHigh:
-  std::cout << "handleevent elevatewaterhigh met event: " << ev << std::endl;
     currentSubState = HandleElevateWaterHigh(elevateState, ev);
     break;
   case ElevateWaterLow:
-   std::cout << "handleevent elevatewaterlow met event" << ev << std::endl;
     currentSubState = HandleElevateWaterLow(ev);
     break;
   case OpenLeftDoor:
@@ -138,12 +133,10 @@ SubState SchutState::HandleCloseRightDoor(Event ev)
 }
 SubState SchutState::HandleCloseLeftDoor(Event ev)
 {
-  std::cout << "event is : " << ev << std::endl;
   SubState nextSubState = CloseLeftDoor;
   switch (ev)
   {
   case EV_LEFTDOORCLOSED:
-    std::cout << "leftdoor closes event case in handle closeleftdoor" << std::endl;
     CloseLeftDoorExitActions();
 
     //check waterlevel to determine te elevation direction
@@ -159,7 +152,6 @@ SubState SchutState::HandleCloseLeftDoor(Event ev)
 SubState SchutState::HandleElevateWaterHigh(ElevateWaterHighSubState& elevateState, Event ev)
 {
   SubState nextSubState = ElevateWaterHigh;
-  std::cout << "HandleElevateWaterHigh schutstate " << std::endl;
   HandleElevateHighSubstates(elevateState, ev);
   OpenValve3ExitActions();
   switch (ev)
@@ -218,7 +210,7 @@ SubState SchutState::HandleOpenLeftDoor(State& superState, Event ev)
 }
 SubState SchutState::HandleOpenRightDoor(State& superState, Event ev)
 {
-  SubState nextSubState = CloseRightDoor;
+  SubState nextSubState = OpenRightDoor;
   switch (ev)
   {
   case EV_RIGHTDOOROPENED:
@@ -230,8 +222,6 @@ SubState SchutState::HandleOpenRightDoor(State& superState, Event ev)
 
     break;
   }
-
-
   return nextSubState;
 }
 
@@ -241,18 +231,15 @@ SubState SchutState::HandleOpenRightDoor(State& superState, Event ev)
 void SchutState::HandleElevateHighSubstates(ElevateWaterHighSubState& elevateState, Event ev)
 {
   elevateState = OpenValve1;
-  std::cout <<"elevatestate = openvalve 1 met event: " << ev << std::endl;
   switch (ev)
   {
   case EV_WATERLEVEL_ABOVE_VALVE2:
     OpenValve1ExitActions();
-    std::cout <<"handleelevatehighsubbstates EV above valve 2" << std::endl;
     elevateState = OpenValve2;
     OpenValve2EntryActions();
     break;
   case EV_WATERLEVEL_ABOVE_VALVE3:
     OpenValve2ExitActions();
-    std::cout <<"handleelevatehighsubbstates EV above valve 3" << std::endl;
     elevateState = OpenValve3;
     OpenValve3EntryActions();
   default:
@@ -367,7 +354,7 @@ void SchutState::OpenLeftDoorExitActions()
 void SchutState::OpenRightDoorEntryActions()
 {
   //Rightdoor.open
-  char message[] = {"SetDoorLeft:open;"};
+  char message[] = {"SetDoorRight:open;"};
   door.SetDoorStatus(message);
 }
 void SchutState::OpenRightDoorExitActions()

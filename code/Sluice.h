@@ -12,7 +12,7 @@ public:
 		iEventGenerator& eventGen);
 	~Sluice();
 
-	bool Run();
+	void Run();
 
 
 private:
