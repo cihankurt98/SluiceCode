@@ -1,6 +1,6 @@
 PRODUCT=sluice
 
-CFLAGS=-Wall -Werror -Wextra -pedantic -ggdb -O0 -Icode -Icode/interfaces
+CFLAGS=-Wall -Werror -Wextra -pedantic -ggdb -O0 -Icode -Icode/interfaces -std=c++11 -pthread
 
 SOURCES=$(wildcard code/*.cpp)
 HEADERS=$(wildcard code/*.h) \

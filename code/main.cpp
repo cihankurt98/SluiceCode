@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <iostream>
+#include <thread>
 
 
 static void ShowMenu( void )
@@ -66,7 +67,8 @@ int main(int argc, char* argv[])
 
 	//char tmpmessage[] = {"SetDoorLeft:open;"};
  	//door.SetDoorStatus(tmpmessage);
-	
+	std::thread poll (&Sluice::Run, sluice);
+	poll.detach();
 	while (!quit)
 	{
 		ShowMenu();
