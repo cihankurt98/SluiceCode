@@ -49,8 +49,6 @@ void SchutState::HandlePseudoState()
     currentSubState = ElevateWaterLow;
     ElevateWaterLowEntryActions();
   }
-
-
 }
 
 void SchutState::HandleEvent(State& superState, ElevateWaterHighSubState& elevateState, Event ev)
@@ -127,11 +125,9 @@ SubState SchutState::HandleCloseRightDoor(Event ev)
   default:
     break;
   }
-
-
   return nextSubState;
-
 }
+
 SubState SchutState::HandleCloseLeftDoor(Event ev)
 {
   SubState nextSubState = CloseLeftDoor;
@@ -186,8 +182,6 @@ SubState SchutState::HandleElevateWaterLow(Event ev)
   default:
     break;
   }
-
-
   return nextSubState;
 }
 
@@ -205,8 +199,6 @@ SubState SchutState::HandleOpenLeftDoor(State& superState, Event ev)
 
     break;
   }
-
-
   return nextSubState;
 }
 SubState SchutState::HandleOpenRightDoor(State& superState, Event ev)
@@ -259,10 +251,8 @@ void SchutState::CloseRightDoorEntryActions()
     LightsLeftRed();
 }
 
-void SchutState::CloseRightDoorExitActions()
-{
-  //nothing
-}
+void SchutState::CloseRightDoorExitActions(){}
+
 void SchutState::CloseLeftDoorEntryActions()
 {
   //ENTRY: leftdoor.close;
@@ -272,45 +262,33 @@ void SchutState::CloseLeftDoorEntryActions()
   //leftdoor trafficlights red
   LightsLeftRed();
 }
-void SchutState::CloseLeftDoorExitActions()
-{
-  //nothing
-}
+void SchutState::CloseLeftDoorExitActions(){}
+
 void SchutState::ElevateWaterHighEntryActions()
 {
   //ENTRY: lowest valve open
   char message[] = {"SetDoorRightValve1:open;"};
   door.SetValveStatus(message);
+}
 
-}
-void SchutState::OpenValve1EntryActions()
-{
-  //do nothing
-}
-void SchutState::OpenValve1ExitActions()
-{
-  //do nothing
-}
+void SchutState::OpenValve1EntryActions(){}
+void SchutState::OpenValve1ExitActions(){}
 void SchutState::OpenValve2EntryActions()
 {
   //open middle valve
   char message[] = {"SetDoorRightValve2:open;"};
   door.SetValveStatus(message);
 }
-void SchutState::OpenValve2ExitActions()
-{
-  //do nothing
-}
+
+void SchutState::OpenValve2ExitActions(){}
 void SchutState::OpenValve3EntryActions()
 {
   //open highest valve
   char message[] = {"SetDoorRightValve3:open;"};
   door.SetValveStatus(message);
 }
-void SchutState::OpenValve3ExitActions()
-{
-  //do nothing
-}
+void SchutState::OpenValve3ExitActions(){}
+
 void SchutState::ElevateWaterHighExitActions()
 {
   char messageValve1[] = {"SetDoorRightValve1:close;"};
@@ -396,4 +374,30 @@ void SchutState::LightsRightRed()
   trafficLight.SetTrafficLightStatus(tlMessageRed2);
   trafficLight.SetTrafficLightStatus(tlMessageGreen);
   trafficLight.SetTrafficLightStatus(tlMessageGreen2);
+}
+
+void SchutState::Resume()
+{
+  switch(currentSubState)
+  {
+    case CloseRightDoor:
+    CloseRightDoorEntryActions();
+    break;
+    case CloseLeftDoor:
+    CloseLeftDoorEntryActions();
+    break;
+    case ElevateWaterHigh:
+    ElevateWaterHighEntryActions();
+    break;
+    case ElevateWaterLow:
+    ElevateWaterLowEntryActions();
+    case OpenLeftDoor:
+    OpenLeftDoorEntryActions();
+    break;
+    case OpenRightDoor:
+    OpenRightDoorEntryActions();
+    break;
+    default:
+    break;
+  };
 }

@@ -31,6 +31,7 @@ public:
   void HandlePseudoState();
   void HandleEvent(State& superState, ElevateWaterHighSubState& elevateState, Event ev);
   void ExitSubStateActions();
+  void Resume();
 
 	SubState HandleCloseRightDoor(Event ev);
 	SubState HandleCloseLeftDoor(Event ev);

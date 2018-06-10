@@ -33,22 +33,24 @@ void Sluice::Run()
 
 void Sluice::HandleEvent(Event ev)
 {
-	switch (currentMainState) {
+	switch (currentMainState)
+	{
 		case Idle:
 		currentMainState = HandleStateIdle(ev);
 			break;
 		case Schutten:
+		std::cout << "Schutten" << std::endl;
 		currentMainState = HandleStateSchutten(ev);
 			break;
 		case Emergency:
+		std::cout << "Emergency" << std::endl;
 			currentMainState = HandleStateEmergency(ev);
 			break;
 		default:
 			std::cerr << "Sluice handle event error mainstate: " << currentMainState << std::endl;
 			break;
-
-
 	};
+
 }
 
 	State Sluice::HandleStateIdle(Event ev)
@@ -118,8 +120,10 @@ void Sluice::HandleEvent(Event ev)
 
 		switch (ev) {
 			case EV_RESUME:
-
-				break; //was return 0;
+			std::cout << "resume pressed ev case" << std::endl; 
+			nextState = Schutten;
+			schutState->Resume();
+				break;
 
 			default:
 				break;
@@ -152,7 +156,6 @@ void Sluice::HandleEvent(Event ev)
 			EmergencyEntryActions();
 			nextState = Emergency;
 			break;
-
 				//Schutten substates below
 			default:
  				schutState->HandleEvent(nextState,elevateState, ev);
@@ -168,15 +171,8 @@ void Sluice::HandleEvent(Event ev)
 
 //PRIVATE METHODS BELOW
 
-	void Sluice::IdleEntryActions()
-	{
-		//do nothing. This exists for possible expansions to the system.
-	}
-	void Sluice::IdleExitActions()
-	{
-
-
-	}
+	void Sluice::IdleEntryActions(){}
+	void Sluice::IdleExitActions(){}
 
 	void Sluice::SchuttenEntryActions()
 	{
@@ -189,11 +185,8 @@ void Sluice::HandleEvent(Event ev)
 		//TODO: SET ALL LIGHTS ON RED.
 		//HALT DOOR MOVEMENT
 		//CLOSE VALVES 
-	
-
 		SetAllLightsRed();
 		HaltAllDoors();
-
 	}
 	void Sluice::EmergencyExitActions() {
 		//do nothing. This exists for possible expansions to the system.
