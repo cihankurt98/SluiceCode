@@ -89,12 +89,6 @@ void EventGenerator::HandlePollEvents()
 		events.push_back((TranslateToEvent(currWaterLevel)));
 		prevWaterLevel = currWaterLevel;
 	}
-	else 
-	{
-		std::cout << "faal if statement" << std::endl;
-		std::cout << "currentWaterLevel is = " << currWaterLevel << std::endl;
-		std::cout << "prevWaterLevel is = " << prevWaterLevel << std::endl;
-	}
 
 	if (currRightDoorState != prevRightDoorState)
 	{

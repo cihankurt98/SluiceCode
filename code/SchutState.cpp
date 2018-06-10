@@ -42,6 +42,7 @@ void SchutState::HandlePseudoState()
 
   else if (door.GetDoorStatus(getDoorRight) == doorClosed && door.GetDoorStatus(getDoorLeft) == doorClosed && waterSensor.GetWaterLevel(getWaterLevel) == low )
   {
+    std::cout << "pseudo 3de if" << std::endl;
     currentSubState = ElevateWaterHigh;
     ElevateWaterHighEntryActions();
   }
@@ -62,17 +63,21 @@ void SchutState::HandleEvent(State& superState, ElevateWaterHighSubState& elevat
     break;
   case CloseLeftDoor:
     currentSubState = HandleCloseLeftDoor(ev);
+    break;
   case ElevateWaterHigh:
   std::cout << "handleevent elevatewaterhigh met event: " << ev << std::endl;
     currentSubState = HandleElevateWaterHigh(elevateState, ev);
+    break;
   case ElevateWaterLow:
-
    std::cout << "handleevent elevatewaterlow met event" << ev << std::endl;
     currentSubState = HandleElevateWaterLow(ev);
+    break;
   case OpenLeftDoor:
     currentSubState = HandleOpenLeftDoor(superState, ev);
+    break;
   case OpenRightDoor:
     currentSubState = HandleOpenRightDoor(superState, ev);
+    break;
 
   default:
     std::cerr << "Schutstate handle event error mainstate:  " << currentSubState << std::endl;
@@ -160,10 +165,7 @@ SubState SchutState::HandleElevateWaterHigh(ElevateWaterHighSubState& elevateSta
   switch (ev)
   {
   case EV_WATER_HIGH:
-  std::cout << "handlelevatewaterhigh schutstate " << std::endl;
     ElevateWaterHighExitActions();
-
-
     nextSubState = OpenRightDoor;
     OpenRightDoorEntryActions();
     break;
@@ -323,25 +325,23 @@ void SchutState::OpenValve3ExitActions()
 }
 void SchutState::ElevateWaterHighExitActions()
 {
-  char message[] = {"SetDoorRightValve0:close;"};
-
-  for (int i = 1; i < 4; i++)
-  {
-    char c = i;
-    message[17] = c;
-    door.SetValveStatus(message);
-  }
+  char messageValve1[] = {"SetDoorRightValve1:close;"};
+  char messageValve2[] = {"SetDoorRightValve2:close;"};
+  char messageValve3[] = {"SetDoorRightValve3:close;"};
+  door.SetValveStatus(messageValve1);
+  door.SetValveStatus(messageValve2);
+  door.SetValveStatus(messageValve3);
 }
 void SchutState::ElevateWaterLowEntryActions()
 {
   //ENTRY: open lowest valve
-  char message[] = {"SetDoorRightValve1:open;"};
+  char message[] = {"SetDoorLeftValve1:open;"};
   door.SetValveStatus(message);
 }
 void SchutState::ElevateWaterLowExitActions()
 {
   //EXIT: close lowest valve
-  char message[] = {"SetDoorRightValve1:close;"};
+  char message[] = {"SetDoorLeftValve1:close;"};
   door.SetValveStatus(message);
 }
 void SchutState::OpenLeftDoorEntryActions()

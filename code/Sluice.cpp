@@ -30,10 +30,11 @@ bool Sluice::Run()
 	return ev != NoEventOccured;
 }
 
-void Sluice::HandleEvent(Event ev) {
+void Sluice::HandleEvent(Event ev)
+{
 	switch (currentMainState) {
 		case Idle:
-			currentMainState = HandleStateIdle(ev);
+		currentMainState = HandleStateIdle(ev);
 			break;
 		case Schutten:
 			currentMainState = HandleStateSchutten(ev);
